@@ -1,0 +1,57 @@
+<!--breadcrumb-->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/projects">Projects</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="/project/{{task.project._id}}">{{task.project.name}}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            <a href="/task/{{task._id}}">{{task.name}}</a>
+        </li>
+    </ol>
+</nav>
+
+<!--task information-->
+<h2>{{task.project.name}}</h2>
+<a href="/task/update/{{task._id}}"><i class="fas fa-edit bigIcon" title="Update task"></i></a>
+<h3>{{task.name}}</h3>
+<p>{{task.description}}</p>
+<table class="table">
+    <tr>
+        <th>Assignee</th>
+        <td>{{task.assignee.firstname}} {{task.assignee.name}}</td>
+    </tr>
+    <tr>
+        <th>Start date</th>
+        <td class="date">{{formatDate task.start_date "long"}}</td>
+    </tr>
+    <tr>
+        <th>Due date</th>
+        <td class="date">{{formatDate task.due_date "long"}}</td>
+    </tr>
+    <tr>
+        <th>Status</th>
+        <td>{{task.status.name}}</td>
+    </tr>
+</table>
+
+<!--task journal-->
+{{#if journal}}
+<table class="table">
+    <tr>
+        <th>History</th>
+        <th>Assignee</th>
+    </tr>
+    {{#each journal}}
+        <tr>
+            <td>
+                <span class="badge badge-primary">{{this.author.firstname}} {{this.author.name}}</span>
+                <span class="date">{{formatDate this.date "long"}}</span>
+            </td>
+            <td>{{this.entry}}</td>
+        </tr>
+    {{/each}}
+</table>
+{{/if}}

@@ -1,0 +1,47 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.welcomeText {
+  text-align: center;
+  font-weight: bold;
+}
+
+.welcomeButton{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+.page-header{
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.border {
+  margin-bottom: 15px;
+  border-width:1px !important;
+  border-color:#cccccc !important;
+}
+
+.bigIcon {
+  float: right;
+  font-size: xx-large;
+  color:#1a1aff;
+}
+
+.date {
+  font-style: italic;
+}
+

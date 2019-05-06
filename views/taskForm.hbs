@@ -1,0 +1,91 @@
+<!--breadcrumb-->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/projects">Projets</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="/project/{{project._id}}">{{project.name}}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            <a href="/task/{{task._id}}">{{task.name}}</a>
+        </li>
+    </ol>
+</nav>
+
+<!--form-->
+<h3>{{project.name}}</h3>
+
+{{#if task._id}}
+    <p>Update a task</p>
+{{else}}
+    <p>Creat a new task</p>
+{{/if}}
+
+<div class="container">
+    {{#if task._id}}
+    <form action="/task/post/{{task._id}}" method="post">
+    {{else}}
+    <form action="/task/post/new" method="post">
+    {{/if}}
+        <!--hidden field to post the project _id with the task-->
+        <input type="text" name="project" value="{{project._id}}" style="display:none;">
+        <div class="form-group row">
+            <label for="title" class="col-sm-4 col-form-label">Title</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control"
+                       id="title" name="name"
+                       value="{{task.name}}" placeholder="Enter a title">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="description" class="col-sm-4 col-form-label">Description</label>
+            <div class="col-sm-8">
+                <textarea class="form-control" rows="2"
+                          id="description" name="description"
+                          placeholder="Enter a description">{{task.description}}</textarea>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="assignee" class="col-sm-4 col-form-label">Assignee</label>
+            <div class="col-sm-8">
+                <select class="custom-select" size="1" id="assignee" name="assignee" >
+                    {{#each members}}
+                        <option {{selected ../task.assignee.id this.id}}
+                                {{!--Handlebars helper to select the right field when updating task --}}
+                                value="{{this._id}}">
+                            {{this.firstname}} {{this.name}}
+                        </option>
+                    {{/each}}
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="start_date" class="col-sm-4 col-form-label">Start date</label>
+            <div class="col-sm-8">
+                <input id="start_date" type="date" class="form-control" name="start_date" value="{{formatDate task.due_date "htmlInput"}}">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="due_date" class="col-sm-4 col-form-label">Due date</label>
+            <div class="col-sm-8">
+                <input id="due_date" type="date" class="form-control" name="due_date" value="{{formatDate task.due_date "htmlInput"}}">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="status" class="col-sm-4 col-form-label">Status</label>
+            <div class="col-sm-8">
+                <select class="custom-select" id="status" name="status" size="1">
+                    {{#each status}}
+                        <option {{selected ../task.status.id this.id}}
+                                {{!--Handlebars helper to select the right field when updating task --}}
+                                value="{{this._id}}">
+                            {{this.name}}
+                        </option>
+                    {{/each}}
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
