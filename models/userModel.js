@@ -7,7 +7,8 @@ const userSchema = mongoose.Schema({
     name: String,
     firstname: String,
     login: String,
-    password: String
+    password: String,
+    roles: [String]
 });
 
 // Prepare a collection named 'users' after pluralizing 'User'

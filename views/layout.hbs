@@ -25,14 +25,15 @@
 <div class="page-header">
     <h1>Calend-me</h1>
     <p>A cool app to plan nice stuff</p>
-    {{#if firstName}}
+{{#if firstName}}
         <div class="border"></div>
-            <p>Welcome {{firstName}} {{lastName}}
-                <a href="/disconnect"><i class="fas fa-sign-out-alt bigIcon" title="Disconnect"></i></a>
-            </p>
-            </div>
-        </div>
-    {{/if}}
+        <p>Welcome {{firstName}} {{lastName}}
+            <a href="/settings" title="Settings"><i class="icon fa fa-wrench fa-fw bigIcon" title="Settings"></i></a>
+            <a href="/disconnect" title="Disconnect"><i class="fas fa-sign-out-alt bigIcon" title="Disconnect"></i></a>
+        </p>
+    </div>
+    </div>
+{{/if}}
 </div>
 {{{body}}}
 </body>
