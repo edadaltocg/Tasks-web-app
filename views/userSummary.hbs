@@ -1,19 +1,105 @@
-<h2>{{project.name}}</h2>
-<table class="table">
-    <tr>
-    <th>Title</th>
-    <th>Assignee</th>
-    <th>Start date</th>
-<th>Due date</th>
-<th></th>
-</tr>
-{{#each tasks}}
-<tr>
-<td><a href="/task/{{this._id}}">{{this.name}}</a></td>
-<td><span class="badge badge-primary">{{this.assignee.firstname}} {{this.assignee.name}}</span></td>
-<td class="date">{{formatDate this.start_date "long"}}</td>
-<td class="date">{{formatDate this.due_date "long"}}</td>
-<td><a href="/task/update/{{this._id}}" title="Update task"><i class="fas fa-edit"></i></a></td>
-</tr>
-{{/each}}
-</table>
+<h2>Summary</h2>
+
+<!-- Nav tabs-->
+<ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#Projects">Projects</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#Tasks">Tasks</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#FinishedTasks">Finished Tasks</a>
+    </li>
+
+    <!-- Dropdown -->
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Project</a>
+        <div class="dropdown-menu">
+            {{#each projects}}
+                <a class="dropdown-item" data-toggle="tab" href="#Project{{@index}}">{{this.name}}</a>
+            {{/each}}
+        </div>
+    </li>
+</ul>
+
+
+<div class="tab-content">
+    <!-- Projects summary :
+        all the projects of the user-->
+    <div id="Projects" class="container tab-pane fade">
+        <table class="table">
+            <tr>
+                <th>Project</th>
+                <th>Members</th>
+            </tr>
+            {{#each projects}}
+                <tr>
+                    <td>{{this.name}}</td>
+                    <td><ul>{{#each this.members}}
+                            <li><span class="badge badge-primary">
+                                {{this.firstname}} {{this.name}}
+                            </span></li>
+                        {{/each}}
+                        </ul></td>
+                </tr>
+            {{/each}}
+        </table>
+    </div>
+
+    <!-- Tasks summary :
+        all the tasks assigned to the user-->
+    <div id="Tasks" class="container tab-pane fade">
+        <table class="table">
+            <tr>
+                <th>Tasks</th>
+                <th>Project</th>
+                <th>Start date</th>
+                <th>Due date</th>
+                <th>Status</th>
+            </tr>
+            {{#each tasks}}
+                <tr>
+                    <td>{{this.name}}</td>
+                    <td>{{this.project.name}}</td>
+                    <td>{{formatDate this.start_date "long"}}</td>
+                    <td>{{formatDate this.due_date "long"}}</td>
+                    <td>{{this.status.name}}</td>
+                </tr>
+            {{/each}}
+        </table>
+    </div>
+
+    <!-- Finished tasks summary :
+        all the finished tasks assigned to the user-->
+    <div id="FinishedTasks" class="container tab-pane fade">
+        <table class="table">
+            <tr>
+                <th>Tasks</th>
+                <th>Project</th>
+                <th>Start date</th>
+                <th>Due date</th>
+                <th>Status</th>
+            </tr>
+            {{#each finishedTasks}}
+                <tr>
+                    <td>{{this.name}}</td>
+                    <td>{{this.project.name}}</td>
+                    <td>{{formatDate this.start_date "long"}}</td>
+                    <td>{{formatDate this.due_date "long"}}</td>
+                    <td>{{this.status.name}}</td>
+                </tr>
+            {{/each}}
+        </table>
+    </div>
+
+    <!-- Project detail :
+        lists all the tasks of a project-->
+    {{#each projects}}
+    <div id="Project{{@index}}" class="container tab-pane fade">
+        <table class="table">
+            <th>{{this.name}}</th>
+        </table>
+    </div>
+    {{/each}}
+</div>
