@@ -37,6 +37,7 @@ var indexRouter = require('./routes/index');
 var authRouter = require('./routes/auth');
 var projectsRouter = require('./routes/projects');
 var tasksRouter = require('./routes/tasks');
+var summaryRouter = require('./routes/userSummary');
 var disconnectRouter = require('./routes/disconnect');
 
 // setting up the routers
@@ -44,6 +45,7 @@ app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/', projectsRouter);
 app.use('/task', tasksRouter);
+app.use('/summary', summaryRouter);
 app.use('/disconnect', disconnectRouter);
 
 // catch 404 and forward to error handler

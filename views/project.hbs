@@ -26,8 +26,8 @@
         <tr>
             <td><a href="/task/{{this._id}}">{{this.name}}</a></td>
             <td><span class="badge badge-primary">{{this.assignee.firstname}} {{this.assignee.name}}</span></td>
-            <td class="date">{{formatDate task.start_date "long"}}</td>
-            <td class="date">{{formatDate task.due_date "long"}}</td>
+            <td class="date">{{formatDate this.start_date "long"}}</td>
+            <td class="date">{{formatDate this.due_date "long"}}</td>
             <td><a href="/task/update/{{this._id}}" title="Update task"><i class="fas fa-edit"></i></a></td>
         </tr>
     {{/each}}

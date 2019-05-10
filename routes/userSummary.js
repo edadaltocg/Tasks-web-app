@@ -35,7 +35,8 @@ router.get('/', async(req, res) => {
 
     res.render('userSummary',{projects : projects,
         tasks : tasks, finishedTasks : finishedTasks,
-        projectTasksArray : projectTasksArray});
+        projectTasksArray : projectTasksArray,
+        firstName : req.session.firstname , lastName : req.session.name, userId : req.session.userId});
 });
 
 module.exports = router;
