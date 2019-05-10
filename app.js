@@ -6,8 +6,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 // create a server
-var app = express(),
-    exphbs = require("express-handlebars");
+var app = express();
+var exphbs = require("express-handlebars");
 
 // enable sessions in this server through the req.session variable
 app.use(session({

@@ -9,12 +9,19 @@
         </li>
     </ol>
 </nav>
+
+<button onclick="addFilter()">Add filter </button>
+<table id="filterTable">
+    <tr>
+    </tr>
+</table>
+
 <!--Add a task button-->
 <a href="/task/new/{{project._id}}">
-    <i class="fas fa-plus-circle bigIcon" title="Add a task"></i>
+    <i class="fas fa-plus-circle bigIcon" title="Add a task"> </i>
 </a>
 <h2>{{project.name}}</h2>
-<table class="table">
+<table class="table" id="taskTable">
     <tr>
         <th>Title</th>
         <th>Assignee</th>
@@ -26,9 +33,125 @@
         <tr>
             <td><a href="/task/{{this._id}}">{{this.name}}</a></td>
             <td><span class="badge badge-primary">{{this.assignee.firstname}} {{this.assignee.name}}</span></td>
-            <td class="date">{{formatDate task.start_date "long"}}</td>
-            <td class="date">{{formatDate task.due_date "long"}}</td>
+            <td class="date">{{formatDate this.start_date "long"}}</td>
+            <td class="date">{{formatDate this.due_date "long"}}</td>
             <td><a href="/task/update/{{this._id}}" title="Update task"><i class="fas fa-edit"></i></a></td>
         </tr>
     {{/each}}
 </table>
+<p id="test"></p>
+<script>
+    function filter(){
+        var i, td, txtValue,j, option, filter, selected, date;
+        const filterTable = document.getElementById("filterTable");
+        const table = document.getElementById("taskTable");
+        const tr = table.rows;
+        const filters = filterTable.rows[0].cells;
+        const assignee = new Array();
+        const dueDate = new Array();
+        for (j = 0; j < filters.length; j++){
+            filter = filters[j].getElementsByTagName("table")[0].rows[0].cells;
+            option = filter[0].getElementsByTagName("select")[0].selectedIndex;
+            if (option == 0){
+                assignee.push(filter[1].getElementsByTagName("input")[0].value.toUpperCase());
+            }
+            if (option == 1){
+                date = new Date(Date.parse(filter[1].getElementsByTagName("input")[0].value));
+                dueDate.push(date);
+            }
+        }
+        for (i = 1; i < tr.length; i++){
+            td = tr[i].cells;
+            if(td){
+                txtValue = td[1].textContent || td[1].innerText;
+                if(assignee.length > 0) {
+                    selected = txtValue.toUpperCase().indexOf(assignee[0]) > -1;
+                }
+                else if (dueDate.length > 0){
+                    document.getElementById("test").innerText = "ok";
+                    document.getElementById("test").innerText = new Date(Date.parse(td[3].textContent)).toDateString() + " " + dueDate[0].toDateString();
+                    date = new Date(Date.parse(td[3].textContent));
+                    selected = (date.getTime() <= dueDate[0].getTime());
+                }
+                for (j = 1; j < assignee.length; j++){
+                    selected |= txtValue.toUpperCase().indexOf(assignee[j]) > -1;
+                }
+                txtValue = td[3].textContent || td[3].innerText;
+                for (j = 0; j < dueDate.length; j++){
+                    selected |= (new Date(Date.parse(txtValue))).getTime() <= dueDate[0].getTime();
+                }
+                if(selected){
+                    tr[i].style.display = "";
+                }else{
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+
+    function newInput(inputNumber){
+        var x = document.createElement("INPUT");
+        x.setAttribute("type", "text");
+        x.setAttribute("class", "form-control");
+        x.setAttribute("id", "filter");
+        x.setAttribute("placeholder", "Enter a filter" + inputNumber);
+        x.setAttribute("onkeyup", "filter()");
+        return x;
+    }
+    function newChoiceBar(){
+        var x = document.createElement("SELECT");
+        var opt = document.createElement('option');
+        opt.appendChild(document.createTextNode('name'));
+        opt.value = 'option value';
+        x.appendChild(opt);
+        var opt2 = document.createElement('option');
+        opt2.appendChild(document.createTextNode('due date'));
+        opt2.value = 'option value';
+        x.appendChild(opt2);
+        return x;
+    }
+    function newSuppress(){
+        var x = document.createElement("BUTTON");
+        x.setAttribute("CLASS", "fas fa-times");
+        return x;
+    }
+    function addFilter(){
+        var table = document.getElementById("filterTable");
+        var row = table.rows[0];
+        var length = row.cells.length;
+        var cell = row.insertCell(length);
+
+        //creation du nouveau filtre
+        var test = document.createElement("table");
+        test.setAttribute("id", "filter" + length);
+        var newRow = test.insertRow();
+
+        var newCell2 = newRow.insertCell();
+        var choice = newChoiceBar();
+        choice.setAttribute("id", "option"+length);
+        choice.onchange = choiceChanged;
+        newCell2.appendChild(choice);
+
+        var newCell = newRow.insertCell();
+        newCell.appendChild(newInput(length));
+        var newCell3 = newRow.insertCell();
+        var suppr = newSuppress();
+        suppr.onclick = suppressFilter;
+        newCell3.appendChild(suppr);
+
+        cell.appendChild(test);
+    }
+
+    function choiceChanged(){
+
+        this.closest("table").rows[0].cells[1].getElementsByTagName("input")[0].value = "";
+        filter();
+    }
+
+    function suppressFilter(){
+        var index =  this.closest("table").parentNode.cellIndex;
+        document.getElementById("filterTable").rows[0].deleteCell(index);
+        filter();
+    }
+</script>
+

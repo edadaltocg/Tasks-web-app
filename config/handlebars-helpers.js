@@ -27,7 +27,16 @@ var register = function(Handlebars) {
             else {
                 return datetime;
             }
-        }
+        },
+
+        //Helper that displays a filter
+        /**formatFilter: function(number, options){
+            var text = "<input type=" + "text" + " class=" + "form-control" + " id="+ "filter" + " name=" + "name" + " onkeyup=" + "filter()"  + " placeholder=" + "Enter a filter" + "\>";
+            console.log(text);
+            text = Handlebars.escapeExpression(text.toString());
+            return new Handlebars.SafeString(text.toString());
+        }*/
+
     };
 
     if (Handlebars && typeof Handlebars.registerHelper === "function") {
@@ -40,6 +49,7 @@ var register = function(Handlebars) {
         return helpers;
     }
 };
+
 
 module.exports.register = register;
 module.exports.helpers = register(null);
