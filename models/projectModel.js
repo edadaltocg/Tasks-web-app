@@ -3,7 +3,6 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 
 // A scheme describing the projects registered in the database
 const projectSchema = mongoose.Schema({
-    _id : ObjectId,
     name: String,
     members: [{ type : ObjectId, ref : 'User'}]
 });

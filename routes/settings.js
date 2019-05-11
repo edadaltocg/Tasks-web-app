@@ -10,11 +10,12 @@ const router = express.Router();
 
 /* GET disconnect*/
 router.get('/settings', async (req, res) => {
-    console.log('Entrou!');
-    let projectData = await Project.find({members: req.session.userId});
-
-    // TO DO: Populate members
-
+    if(!req.session.userId)
+        return res.redirect('/');
+    //Extracting the selected task from the database
+    let membersPopulateQuery = {path : 'members', select : 'name firstname -_id'};
+    let projectData = await Project.find({members: req.session.userId})
+        .populate(membersPopulateQuery);
     //console.log(projectData);
     let statusData = await Status.find({});
     //console.log(statusData);
@@ -32,13 +33,9 @@ router.get('/settings', async (req, res) => {
     } else {
         return res.render('settings', {
             title: 'CRUD Settings page',
+            projects: projectData, statuses:statusData,
             firstName: req.session.firstname, lastName: req.session.name
         });
-        /*res.render('settings', {
-            project: projectData, user: mainUser, status:statusData,
-            firstName: req.session.firstname, lastName: req.session.name
-        });*/
-
     }
 });
 

@@ -8,25 +8,42 @@ var DateFormats = {
     htmlInput: "YYYY-MM-DD" //to be used as an input for an html 'date' form
 };
 
-var register = function(Handlebars) {
+var register = function (Handlebars) {
     var helpers = {
         //Helper to set a selected value on a select form
-        selected: function(baseValue, loopValue){
+        selected: function (baseValue, loopValue) {
             if (baseValue === loopValue) {
                 return 'selected';
             }
             return '';
         },
         //Helper that displays the date according to one of the formats
-        formatDate: function(datetime, format) {
+        formatDate: function (datetime, format) {
             if (moment) {
                 // can use other formats like 'lll' too
                 format = DateFormats[format] || format;
                 return moment(datetime).format(format);
+            } else {
+                return datetime(baseValue, loopValue);
             }
-            else {
-                return datetime;
+        },
+        checked: function (baseValue, loopValue) {
+            let i;
+            console.log(baseValue)
+            if(baseValue===null)
+                return '';
+            if(baseValue===undefined)
+                return '';
+            if(baseValue[0]===loopValue)
+                return 'checked';
+            if(baseValue[0]==="member")
+                return '';
+            for (i = 0; i < baseValue.length; i++) {
+                if (baseValue[i]._id.equals(loopValue)) {
+                    return 'checked';
+                }
             }
+            return '';
         }
     };
 
