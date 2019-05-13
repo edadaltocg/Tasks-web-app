@@ -9,8 +9,9 @@ const taskSchema = mongoose.Schema({
     assignee : { type : ObjectId, ref : 'User'},
     start_date : Date,
     due_date : Date,
-    priority : Number,
-    status : { type : ObjectId, ref : 'Status'}
+    advancement : Number,
+    status : { type : ObjectId, ref : 'Status'},
+    priority : { type : ObjectId, ref : 'Priority'}
 });
 
 // Prepare a collection named 'tasks' after pluralizing 'Task'
