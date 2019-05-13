@@ -27,7 +27,7 @@ router.post('/form', async(req, res) => {
 
     if (userData != null) {//Success
         //Creating the session variables linked to the user that has logged in
-        req.session.userId = userData._id;
+        req.session.userId = userData.id;
         req.session.name = userData.name;
         req.session.firstname = userData.firstname;
 

@@ -6,8 +6,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 // create a server
-var app = express(),
-    exphbs = require("express-handlebars");
+var app = express();
+var exphbs = require("express-handlebars");
 
 // enable sessions in this server through the req.session variable
 app.use(session({
@@ -37,6 +37,7 @@ var indexRouter = require('./routes/index');
 var authRouter = require('./routes/auth');
 var projectsRouter = require('./routes/projects');
 var tasksRouter = require('./routes/tasks');
+var summaryRouter = require('./routes/userSummary');
 var disconnectRouter = require('./routes/disconnect');
 var settingsRouter = require('./routes/settings');
 var statusRouter = require('./routes/status');
@@ -47,6 +48,7 @@ app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/', projectsRouter);
 app.use('/task', tasksRouter);
+app.use('/summary', summaryRouter);
 app.use('/disconnect', disconnectRouter);
 app.use('/', settingsRouter);
 app.use('/', statusRouter);
