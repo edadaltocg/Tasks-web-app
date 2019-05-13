@@ -48,6 +48,15 @@ var register = function() {
 
         },
 
+        ifeq: function(a,b,options){
+            if(a===b){
+                return options.fn(this)
+            }
+            else{
+                return options.inverse(this)
+            }
+        },
+
         //Helper that displays a filter
         formatFilter: function(date){
             var text =
