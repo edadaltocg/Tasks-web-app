@@ -38,6 +38,8 @@ var authRouter = require('./routes/auth');
 var projectsRouter = require('./routes/projects');
 var tasksRouter = require('./routes/tasks');
 var disconnectRouter = require('./routes/disconnect');
+var exportRouter = require('./routes/export');
+
 
 // setting up the routers
 app.use('/', indexRouter);
@@ -45,6 +47,7 @@ app.use('/auth', authRouter);
 app.use('/', projectsRouter);
 app.use('/task', tasksRouter);
 app.use('/disconnect', disconnectRouter);
+app.use('/export', exportRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

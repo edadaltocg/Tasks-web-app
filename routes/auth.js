@@ -30,6 +30,7 @@ router.post('/form', async(req, res) => {
         req.session.userId = userData._id;
         req.session.name = userData.name;
         req.session.firstname = userData.firstname;
+        req.session.role = userData.roles[0];
 
         res.redirect('/projects'); //Redirecting to the project page
     } else {//Error
