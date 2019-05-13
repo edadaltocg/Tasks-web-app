@@ -9,12 +9,24 @@
         </li>
     </ol>
 </nav>
+
+<button onclick=addFilter()>Add filter </button>
+<div id="filterTable">
+</div>
+
 <!--Add a task button-->
-<a href="/task/new/{{project._id}}">
-    <i class="fas fa-plus-circle bigIcon" title="Add a task"></i>
-</a>
-<h2>{{project.name}}</h2>
-<table class="table">
+<table style="width:100%">
+    <tr>
+        <td>
+            <h2>{{project.name}}</h2>
+        </td>
+        <td>
+            <a href="/task/new/{{project._id}}" style="align:right"><i class="fas fa-plus-circle bigIcon" title="Add a task"> </i></a>
+        </td>
+    </tr>
+</table>
+
+<table class="table" id="taskTable">
     <tr>
         <th>Title</th>
         <th>Assignee</th>
@@ -32,3 +44,138 @@
         </tr>
     {{/each}}
 </table>
+<p id="test"></p>
+<script>
+    function filter(){
+        var i, td, txtValue,j, option, filter, selected, date, assignee, logic;
+        const filterTable = document.getElementById("filterTable");
+        const table = document.getElementById("taskTable");
+        const tr = table.rows;
+        const filters = filterTable.childNodes;
+        const filtres = new Array();
+        for (j = 0; j < filters.length; j = j+2){
+            filter = filters[j].getElementsByTagName("table")[0].rows[0].cells;
+            option = filter[0].getElementsByTagName("select")[0].selectedIndex;
+            if (j > 0){
+                logic = filters[j-1].getElementsByTagName("select")[0].selectedIndex;
+            }
+            else{
+                logic = 1;
+            }
+            if (isDate(option)){
+                date = filter[2].getElementsByTagName("input")[0].valueAsDate;
+                if(date != null){
+                    filtres.push([logic, option, filter[1].getElementsByTagName("select")[0].selectedIndex, date]);
+                }
+            }
+            else{
+                assignee = filter[1].getElementsByTagName("input")[0].value.toUpperCase();
+                if (assignee != ""){
+                    filtres.push([logic, option, assignee]);
+                }
+            }
+        }
+        for (i = 1; i < tr.length; i++){
+            if(filtres.length == 0){
+                selected = true;
+            }
+            else{
+                if(filtres[0][0] == 0){
+                    selected = true;
+                }
+                else{
+                    selected = false;
+                }
+            }
+            td = tr[i].cells;
+            selected = filtres.reduce((accumulator, currentValue) => {
+                option = currentValue[1];
+                txtValue = td[option].textContent || td[option].innerText;
+                if (isDate(option)){
+                    if (currentValue[2] == 0){
+                        logic = (new Date(Date.parse(txtValue))) <= currentValue[3];
+                    }
+                    else{
+                        logic = (new Date(Date.parse(txtValue))) >= currentValue[3];
+                    }
+                }
+                else{
+                    logic = txtValue.toUpperCase().indexOf(currentValue[2]) > -1;
+                }
+
+                if (currentValue[0] == 0){
+                    return accumulator && logic;
+                }
+                else{
+                    return accumulator || logic;
+                }
+            }, selected);
+
+            if(selected){
+                tr[i].style.display = "";
+            }else{
+                tr[i].style.display = "none";
+            }
+        }
+    }
+
+    function isDate(index){
+        return (index == 3 || index == 2);
+    }
+
+    function addFilter(){
+        var table = document.getElementById("filterTable");
+        var length = table.childNodes.length;
+        if (length > 0) {
+            if(table.childNodes[0].toString() === "[object Text]"){
+                table.removeChild(table.childNodes[0]);
+            }
+            else{
+                var logicCell = document.createElement("div");
+                logicCell.innerHTML = "{{{logicFilter}}}";
+                logicCell.style.cssFloat = "left";
+                table.appendChild(logicCell);
+            }
+        }
+        var cell = document.createElement("div");
+        cell.innerHTML = "{{{formatFilter }}}";
+        cell.style.cssFloat = "left";
+        cell.getElementsByTagName("button")[0].onclick = suppressFilter;
+        cell.getElementsByTagName("select")[0].onchange = choiceChanged;
+        table.appendChild(cell);
+    }
+
+    function choiceChanged(){
+        var row = this.closest("table").rows[0];
+        if (isDate(row.cells[0].getElementsByTagName("select")[0].selectedIndex)){
+            if (row.cells.length == 3){
+                var cell = row.insertCell(1);
+                cell.innerHTML = "{{{dateFilter}}}";
+            }
+            row.cells[2].getElementsByTagName("input")[0].type = "date";
+            row.cells[2].getElementsByTagName("input")[0].value = "";
+        }
+        else{
+            if (row.cells.length == 4){
+                row.deleteCell(1);
+            }
+            row.cells[1].getElementsByTagName("input")[0].type = "text";
+            row.cells[1].getElementsByTagName("input")[0].value = "";
+        }
+        filter();
+    }
+
+    function suppressFilter(){
+        var previous =  this.closest("table").parentNode.previousSibling;
+        var next = this.closest("table").parentNode.nextSibling;
+        document.getElementById("filterTable").removeChild(this.closest("table").parentNode);
+        if (previous != null){
+            document.getElementById("filterTable").removeChild(previous);
+        }
+        else if (next != null){
+            document.getElementById("filterTable").removeChild(next);
+        }
+        filter();
+    }
+</script>
+
