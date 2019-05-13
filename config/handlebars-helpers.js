@@ -1,6 +1,7 @@
 /*Configuration of the handlebars helpers*/
 
 var moment = require('moment'); //Library moments to manage the date display
+var Handlebars = require('handlebars');
 
 //Format used in this project
 var DateFormats = {
@@ -8,7 +9,7 @@ var DateFormats = {
     htmlInput: "YYYY-MM-DD" //to be used as an input for an html 'date' form
 };
 
-var register = function(Handlebars) {
+var register = function() {
     var helpers = {
         //Helper to set a selected value on a select form
         selected: function(baseValue, loopValue){
@@ -30,12 +31,38 @@ var register = function(Handlebars) {
         },
 
         //Helper that displays a filter
-        /**formatFilter: function(number, options){
-            var text = "<input type=" + "text" + " class=" + "form-control" + " id="+ "filter" + " name=" + "name" + " onkeyup=" + "filter()"  + " placeholder=" + "Enter a filter" + "\>";
-            console.log(text);
-            text = Handlebars.escapeExpression(text.toString());
-            return new Handlebars.SafeString(text.toString());
-        }*/
+        formatFilter: function(date){
+            var text =
+                "<table><tr>" +
+                "<td><select>" +
+                "<option>name</option>" +
+                "<option>assignee</option>" +
+                "<option>start date</option>" +
+                "<option>due date</option></select></td>" +
+                "<td><input type=name class=form-control name=name onchange=filter() onkeyup='filter()' placeholder='Enter a filter'></td>" +
+                "<td><button class='fas fa-times' onchange='suppressFilter'></button></td>" +
+                "</tr></table>";
+            return text;
+        },
+
+        dateFilter: function(){
+            var text =
+                "<select onchange='filter()'>" +
+                "<option>before</option>" +
+                "<option>after</option>" +
+                "</select>"
+            return text;
+        },
+
+        logicFilter: function(){
+            var text =
+                "<select onchange='filter()'>" +
+                "<option>and</option>" +
+                "<option>or</option>" +
+                "</select>"
+            return text;
+        }
+
 
     };
 
