@@ -45,3 +45,9 @@ a {
   font-style: italic;
 }
 
+.settingslist{
+  list-style: none;
+  padding-left: 0;
+}
+
+

@@ -99,4 +99,18 @@ router.post('/post/:task_id', async(req, res) => {
     }
 });
 
+/* Remove task*/
+router.get('/remove/:task_id', async(req,res) =>{
+    var filter = {_id: req.params.task_id};
+    var task = await Task.find(filter);
+    var proj = await Project.find({_id:task[0].project});
+    await Task.remove(filter, function (err) {
+        if (err) {
+            console.error('Not found', filter);
+        }
+    });
+    console.log(proj[0])
+    res.redirect('/project/' + proj[0]._id);
+});
+
 module.exports = router;

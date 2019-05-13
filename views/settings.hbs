@@ -1,0 +1,115 @@
+<!--breadcrumb-->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/projects">Projects</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            <a href="/project/{{project._id}}">{{project.name}}</a>
+        </li>
+    </ol>
+</nav>
+<!--Add a task button-->
+<!--
+<a href="/task/new/{{project._id}}">
+    <i class="fas fa-plus-circle bigIcon" title="Add a task"></i>
+</a>
+-->
+<h1>Settings</h1>
+<table>
+    <a href="/project/new">
+        <i class="fas fa-plus-circle bigIcon" title="Add a project"></i>
+    </a>
+    <h2>Your Projects</h2>
+
+
+</table>
+<table class="table">
+    <tr>
+        <th>Name</th>
+        <th>Members</th>
+        <th></th>
+        <th></th>
+    </tr>
+    {{#each projects}}
+        <tr>
+            <td>{{this.name}}</td>
+            <td>
+                <ol class="settingslist">
+                    {{#each this.members}}
+                        <li><span class="badge badge-primary">{{this.firstname}} {{this.name}}</span></li>
+                    {{/each}}
+                </ol>
+            </td>
+            <td style="width: 5%"><a href="/project/update/{{this._id}}" title="Update project"><i
+                    class="fas fa-edit"></i></a></td>
+            <td style="width: 5%"><a href="/project/remove/{{this._id}}" title="Remove project"><i
+                    class="fas fa-trash-alt"></i></a></td>
+        </tr>
+    {{/each}}
+</table>
+
+<div class="border"></div>
+
+<a href="/status/new">
+    <i class="fas fa-plus-circle bigIcon" title="Add a status"></i>
+</a>
+<h2>Statuses</h2>
+
+<table class="table" class="fixed">
+    <tr>
+        <th>Name</th>
+        <th></th>
+        <th></th>
+
+    </tr>
+    {{#each statuses}}
+        <tr>
+            <td>{{this.name}}</td>
+            <td style="width: 5%"><a href="/status/update/{{this._id}}" title="Update status"><i
+                    class="fas fa-edit"></i></a></td>
+            <td style="width: 5%"><a href="/status/remove/{{this._id}}" title="Remove user"><i
+                    class="fas fa-trash-alt"></i></a></td>
+        </tr>
+    {{/each}}
+</table>
+
+{{#if users}}
+    <div class="border"></div>
+
+    <a href="/user/new">
+        <i class="fas fa-plus-circle bigIcon" title="Add a user"></i>
+    </a>
+    <h2>Users</h2>
+
+    <table class="table">
+        <tr>
+            <th>Fisrtname</th>
+            <th>Lastname</th>
+            <th>Login</th>
+            <th>Password</th>
+            <th>Roles</th>
+            <th></th>
+            <th></th>
+        </tr>
+        {{#each users}}
+            <tr>
+                <td>{{this.firstname}}</td>
+                <td>{{this.name}}</td>
+                <td>{{this.login}}</td>
+                <td>{{this.password}}</td>
+                <td>
+                    <ol class="settingslist">
+                        {{#each this.roles}}
+                            <li>{{this}}</li>
+                        {{/each}}
+                    </ol>
+                </td>
+                <td style="width: 5%"><a href="/user/update/{{this._id}}" title="Update user"><i
+                        class="fas fa-edit"></i></a></td>
+                <td style="width: 5%"><a href="/user/remove/{{this._id}}" title="Remove user"><i
+                        class="fas fa-trash-alt"></i></a></td>
+            </tr>
+        {{/each}}
+    </table>
+{{/if}}
