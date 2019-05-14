@@ -4,6 +4,7 @@ var path = require('path');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var zip = require('express-easy-zip');
 
 // create a server
 var app = express();
@@ -31,6 +32,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(zip())
 
 // declaring the routers
 var indexRouter = require('./routes/index');
