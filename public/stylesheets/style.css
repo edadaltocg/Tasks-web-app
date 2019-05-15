@@ -84,3 +84,14 @@ a {
   background: #4CAF50;
   cursor: pointer;
 }
+
+#progressBar {
+  width: 100%;
+  background-color: grey;
+}
+
+#progressBG {
+  width: 1%;
+  height: 30px;
+  background-color: green;
+}
