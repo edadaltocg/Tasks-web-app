@@ -32,11 +32,12 @@ router.get('/', async(req, res) => {
     //Array containing:
     //  Project name
     //  Task list
-    // Total Advancement
+    //  Total Advancement
 
-    for(let p in projects){
+    for(let p in projects){ //Cycling through all the projects of the user
         let project = projects[p];
 
+        //Fetching a specific project tasks
         let projectTasks = await Task.find({project : project._id})
             .populate(taskPopulateQuery);
 
