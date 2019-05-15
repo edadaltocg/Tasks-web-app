@@ -98,7 +98,7 @@
                 //search if the user have chosen "before" or "after"
                 logic = filter[1].getElementsByTagName("select")[0].selectedIndex;
                 if (value !== ""){
-                    filtersArray.push([logic, option, logic, value]);
+                    filtersArray.push([logic, option, logic, parseInt(value, 10)]);
                 }
             }
             else{
@@ -140,10 +140,10 @@
                 }
                 else if(isInt(option)){
                     if (currentValue[2] === 0){ //the user chooses before
-                        logic = txtValue <= currentValue[3];
+                        logic = parseInt(txtValue, 10) <= currentValue[3];
                     }
                     else{ //the user chooses after
-                        logic = txtValue >= currentValue[3];
+                        logic = parseInt(txtValue, 10) >= currentValue[3];
                     }
                 }
                 else{
@@ -187,6 +187,10 @@
                 if (isDate(n)){
                     x = new Date(Date.parse(x));
                     y = new Date(Date.parse(y));
+                }
+                else if (isInt(n)){
+                    x = parseInt(x, 10);
+                    y = parseInt(y, 10);
                 }
                 if (dir === "asc"){
                     if (x > y) {
@@ -277,7 +281,7 @@
             row.cells[2].getElementsByTagName("input")[0].value = "";
         }
 
-        else if(option){
+        else if(isInt(option)){
             //add a before/after choice if needed
             if (row.cells.length === 3){
                 row.insertCell(1);

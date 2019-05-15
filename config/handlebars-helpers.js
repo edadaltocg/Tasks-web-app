@@ -69,7 +69,7 @@ var register = function() {
                 "<option>advancement</option>" +
                 "<option>status</option>" +
                 "<option>priority</option></select></td>" +
-                "<td><input type=name class=form-control name=name placeholder='Enter a filter'></td>" +
+                "<td><input type=name class=form-control onclick='filter()' onkeyup='filter()' name=name placeholder='Enter a filter'></td>" +
                 "<td><button class='fas fa-times'></button></td>" +
                 "</tr></table>";
             return text;

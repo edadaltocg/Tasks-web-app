@@ -1,8 +1,12 @@
 # project-eisc-209
 
-## Eduardo
-Test master
+## Groupe 7
+- Eduardo Gomes
+- Emilie Carencotte
+- Côme Perrot
+- Zhengyu Jiang
 
-Test my branch
+## Run instructions
+$ nodemon start
 
 
