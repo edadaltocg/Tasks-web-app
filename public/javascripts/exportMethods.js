@@ -2,6 +2,7 @@ const Project = require('../../models/projectModel');
 const Task = require('../../models/taskModel');
 const Journal = require('../../models/journalModel');
 const fs = require('fs');
+var builder = require('xmlbuilder');
 
 module.exports = {
 
@@ -57,6 +58,45 @@ module.exports = {
             }
             req.session.zipContent.push({content:tasksName, name:'tasks.csv'});
         }
+    },
+
+    exportXML: async function (req,res) {
+
+        var xml = builder.create('projects');
+        var projectsData = await Project.find({_id:req.session.exportProjects})
+            .populate('members').catch((mongoError) => res.render('error', {error: mongoError}));
+        for (var i = 0; i < projectsData.length; i++) {
+            xml = xml.ele('project',{'name':projectsData[i].name});
+            console.log(projectsData[i].members);
+            for (var j = 0; j <projectsData[i].members.length; j++) {
+                xml.ele('member',{}, projectsData[i].members[j].name + ' ' + projectsData[i].members[j].firstname);
+            }
+
+            var tasksData = await Task.find({_id:Object.keys(req.body),project:projectsData[i]._id})
+                .populate('assignee').populate('status').catch((mongoError) => res.render('error',{error:mongoError}));
+            for (var j = 0; j < tasksData.length; j++) {
+                xml = xml.ele('task',{'name':tasksData[j].name});
+                xml.ele('status',{},tasksData[j].status.name);
+                xml.ele('start_date',{},tasksData[j].start_date.toString());
+                xml.ele('due_date',{},tasksData[j].due_date.toString());
+                xml.ele('assignee',{},tasksData[j].assignee.name+' '+tasksData[j].assignee.firstname);
+                xml.ele('description',{},tasksData[j].description);
+                let journalsData = await Journal.find({task:tasksData[j]._id}).populate('author').catch((mongoError) => res.render('error', {error: mongoError}));
+                for (var k = 0; k < journalsData.length; k++) {
+                    xml = xml.ele('journal',{'entry':journalsData[k].entry});
+                    xml.ele('date',{},journalsData[k].date.toString());
+                    xml.ele('author',{},journalsData[k].author.name + ' ' +journalsData[k].author.firstname);
+                    xml = xml.up();
+                }
+                xml = xml.up();
+            }
+            xml = xml.up();
+        }
+
+        var content = xml.end({pretty:true});
+        req.session.zipContent.push({content:content, name:'projects.xml'});
+
+
     }
 
 

@@ -13,6 +13,7 @@ var exportMethods = require('../public/javascripts/exportMethods');
 router.get('/',async (req,res) => {
 
     req.session.zipContent = [];
+    req.session.exportProjects = [];
     var formats = [
         {_id:'csvFile',name:'CSV'},
         {_id:'xmlFile',name:'XML'},
@@ -43,18 +44,26 @@ router.post('/dataFormat',async (req,res) => {
 router.post('/tasks',async (req,res) => {
     /*export all the tasks assigned to him*/
     console.log(req.session.dataFormatExport);
-    switch (req.session.dataFormatExport[0]) {
-        case 'csvFile':
-            await exportMethods.exportTasksCSV(req,res);
-            break;
-        default:
-            res.redirect('/projects');
-            return ;
+    for (var i = 0;i<req.session.dataFormatExport.length;i++) {
+
+        switch (req.session.dataFormatExport[i]) {
+            case 'csvFile':
+                await exportMethods.exportTasksCSV(req,res);
+                break;
+            case 'xmlFile':
+                await exportMethods.exportXML(req,res);
+                break;
+            default:
+                res.redirect('/projects');
+                return ;
+        }
     }
 
+
     console.log("----------compress---------");
-    console.log(req.session.zipContent);
+    //console.log(req.session.zipContent);
     res.zip({files:req.session.zipContent, filename:'myfile.zip'});
+    req.session.zipContent = [];
     console.log("----------fini---------");
 });
 
@@ -62,8 +71,19 @@ router.post('/tasks',async (req,res) => {
 router.post('/projects',async (req,res) => {
 
     var filterQuery = {project:Object.keys(req.body)};
+    req.session.exportProjects = Object.keys(req.body);
     var tasksData;
-    await exportMethods.exportProjectsCSV(req,res);
+    for (var i = 0;i<req.session.dataFormatExport.length;i++) {
+
+        switch (req.session.dataFormatExport[i]) {
+            case 'csvFile':
+                await exportMethods.exportProjectsCSV(req,res);
+                break;
+            default:
+                break;
+        }
+    }
+
     if (req.session.role !== "admin") {
         filterQuery.assignee = req.session.userId;
     }
