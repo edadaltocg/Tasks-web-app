@@ -30,7 +30,19 @@ router.get('/', async(req, res) => {
         let projectTasks = await Task.find({project : project._id})
             .populate(taskPopulateQuery);
 
-        projectTasksArray.push({projectName : project.name, tasks : projectTasks});
+        let numberTasks = 0;
+        let projectAdvancement=0;
+
+        for(let t in projectTasks){
+            let task = projectTasks[t];
+
+            numberTasks += 1;
+            projectAdvancement += task.advancement;
+        }
+
+        projectAdvancement = projectAdvancement/numberTasks;
+
+        projectTasksArray.push({projectName : project.name, tasks : projectTasks, projectAdvancement});
     }
 
     res.render('userSummary',{projects : projects,

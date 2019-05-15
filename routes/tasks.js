@@ -15,13 +15,13 @@ router.get('/:task_id', async (req, res) => {
     let taskFilter;
     if (req.params.task_id) {
         taskFilter = req.params.task_id
-    }
-    ;
+    };
 
     //Extracting the selected task from the database
-    let taskPopulateQuery = [{path: 'assignee', select: 'name firstname -_id'},
-        {path: 'project', select: 'name'}, {path: 'status', select: 'name -_id'}];
-    let task = await Task.findOne({_id: taskFilter})
+    let taskPopulateQuery = [{path : 'assignee', select : 'name firstname -_id'},
+        {path : 'project', select : 'name'},
+        {path : 'status', select : 'name -_id'},{path : 'priority', select : 'name -_id'}];
+    let task = await Task.findOne({_id : taskFilter})
         .populate(taskPopulateQuery);
 
     //Extracting the journal of the task
