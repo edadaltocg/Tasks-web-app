@@ -2,7 +2,6 @@ const express = require('express');
 
 const Project = require('../models/projectModel');
 const Task = require('../models/taskModel');
-const Journal = require('../models/journalModel');
 
 const fs = require('fs');
 

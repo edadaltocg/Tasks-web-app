@@ -1,8 +1,5 @@
 const express = require('express');
-
 const Project = require('../models/projectModel');
-const Task = require('../models/taskModel');
-const Journal = require('../models/journalModel');
 const Status = require('../models/statusModel');
 const User = require('../models/userModel');
 const Priority = require('../models/priorityModel');

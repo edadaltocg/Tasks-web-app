@@ -11,7 +11,6 @@ const router = express.Router();
 router.get('/projects', async (req, res) => {
     //Extracting the projects of the user from the database
     let projectData = await Project.find({members: req.session.userId});
-    console.log(res.breadcrumb);
     res.render('projects', {
         projects: projectData,
         firstName: req.session.firstname, lastName: req.session.name
@@ -46,7 +45,6 @@ router.post('/project/post/:par', async (req, res) => {
 
         //Loading the changes from the form
         let projectUpdates = req.body;
-        console.log(req.body);
         // update the task on the database
         await Project.updateOne(projectFilter, projectUpdates);
 
