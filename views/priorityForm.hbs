@@ -1,0 +1,38 @@
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/settings">Settings</a>
+        </li>
+    </ol>
+</nav>
+
+<!--form-->
+{{#if element._id}}
+    <h3>Update {{dbElement}} "{{element.name}}"</h3>
+{{else}}
+    <h3>Create a new {{dbElement}}</h3>
+{{/if}}
+
+<div class="container">
+    <!-- update -->
+    {{#if element._id}}
+    <form action="/{{dbElement}}/post/{{element._id}}" method="post">
+    {{else}}
+    <form action="/{{dbElement}}/post/new" method="post">
+    {{/if}}
+
+
+    <div class="form-group row">
+        <label for="title" class="col-sm-4 col-form-label">Name</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control"
+                   id="title" name="name"
+                   value="{{element.name}}" placeholder="Enter name">
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+</div>

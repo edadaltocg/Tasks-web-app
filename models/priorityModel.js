@@ -1,11 +1,11 @@
 const mongoose = require('./connect');
 
-// A scheme describing the status that a task can have
+// A scheme describing the priorities that a task can have
 const prioritySchema = mongoose.Schema({
     name: String
 });
 
-// Prepare a collection named 'statusess' (name has been chose to fit the existing collection)
+// Prepare a collection named 'priorities'
 const priorityModel = mongoose.model('Priority', prioritySchema,'priorities');
 
 module.exports = priorityModel;

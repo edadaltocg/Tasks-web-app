@@ -6,13 +6,12 @@ const Status = require('../models/statusModel')
 
 const router = express.Router();
 
-
 /* GET projects page :
 *    lists all the projects of the user that has logged in*/
 router.get('/projects', async (req, res) => {
     //Extracting the projects of the user from the database
     let projectData = await Project.find({members: req.session.userId});
-
+    console.log(res.breadcrumb);
     res.render('projects', {
         projects: projectData,
         firstName: req.session.firstname, lastName: req.session.name
@@ -21,9 +20,6 @@ router.get('/projects', async (req, res) => {
 
 /*GET add a project form page*/
 router.get('/project/new', async (req, res) => {
-
-    console.log(req.session);
-
     //Extracting all users from database
     let usersData = await User.find();
 

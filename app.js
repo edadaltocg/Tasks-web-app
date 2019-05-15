@@ -44,6 +44,7 @@ var statusRouter = require('./routes/status');
 var usersRouter = require('./routes/users');
 var graphRouter = require('./routes/userGraphs');
 var exportRouter = require('./routes/export');
+var priorityRouter = require('./routes/priority');
 
 // setting up the routers
 app.use('/', indexRouter);
@@ -56,6 +57,7 @@ app.use('/', settingsRouter);
 app.use('/', statusRouter);
 app.use('/', usersRouter);
 app.use('/graphs', graphRouter);
+app.use('/', priorityRouter);
 app.use('/export', exportRouter);
 
 // catch 404 and forward to error handler
