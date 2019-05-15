@@ -129,5 +129,15 @@ a {
 .dropdown:hover .dropdown-content {display: block;}
 
 .tab-content{
-  margin-top: 5px;
+  margin-top: 5px}
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+.filter {width: 37.5%; text-align: right; margin-bottom: 10px}
+.logic {width: 12.5%; text-align: left;margin-bottom: 10px}
+
+@media only screen and (max-width: 1100px) {
+  /* For mobile phones: */
+  .filter {width: 75%; text-align: right; margin-bottom: 10px}
+  .logic {width: 25%; text-align: left; margin-bottom: 10px}
 }

@@ -11,12 +11,14 @@
 </nav>
 
 <!-- filter space -->
-<!-- Add a filter button -->
-<button type="button" class="btn btn-primary" onclick=addFilter()>Add filter </button>
-<!-- filter table -->
-<div id="filterTable"></div>
+<div>
+    <!-- Add a filter button -->
+    <button type="button" class="btn btn-primary" style= "margin-bottom:10px" onclick=addFilter()>Add filter </button>
+    <!-- filter table -->
+    <div id="filterTable"></div>
+</div>
 
-<table style="width:100%">
+<table style="width:100%; margin-top: 30px">
     <tr>
         <td>
             <h2>{{project.name}}</h2>
@@ -55,43 +57,52 @@
     {{/each}}
 </table>
 
-
 <script>
     //Fonction that generate the filter
     function filter(){
-        let i, td, txtValue,j, option, filter, selected, value, logic;
-        const filterTable = document.getElementById("filterTable");
+        let i, td, txtValue,option, filter, selected, value, logic;
+        //get the task table rows
         const taskTable = document.getElementById("taskTable").rows;
+        //get the filter columns (filterTable is div not table)
+        const filterTable = document.getElementById("filterTable");
         const filters = filterTable.childNodes;
         const filtersArray = [];
 
         //1° Convert the filterTable into an arrayFilter
-        for (j = 0; j < filters.length; j = j+2){
-            filter = filters[j].getElementsByTagName("table")[0].rows[0].cells;
+        for (i = 0; i < filters.length; i = i+2){
+            //get the filter number i
+            filter = filters[i].getElementsByTagName("table")[0].rows[0].cells;
+            //get the filter's option
             option = filter[0].getElementsByTagName("select")[0].selectedIndex;
             //search if the user have chosen "and" or "or" (or by default for the first filter)
-            if (j > 0){
-                logic = filters[j-1].getElementsByTagName("select")[0].selectedIndex;
+            if (i > 0){
+                logic = filters[i-1].getElementsByTagName("select")[0].selectedIndex;
             }
             else{
                 logic = 1;
             }
 
-            //get the filter value and add the info the filterArray
+            //get the filter value and add the info in the filterArray
             if (isDate(option)){
+                //get the filter value
                 value = filter[2].getElementsByTagName("input")[0].valueAsDate;
+                //search if the user have chosen "before" or "after"
+                logic = filter[1].getElementsByTagName("select")[0].selectedIndex;
                 if(value != null){
-                    filtersArray.push([logic, option, filter[1].getElementsByTagName("select")[0].selectedIndex, value]);
+                    filtersArray.push([logic, option, value]);
                 }
             }
             else if (isInt(option)){
+                //get the filter value
                 value = filter[2].getElementsByTagName("input")[0].value;
-                document.getElementById("test").innerText = value;
+                //search if the user have chosen "before" or "after"
+                logic = filter[1].getElementsByTagName("select")[0].selectedIndex;
                 if (value !== ""){
-                    filtersArray.push([logic, option, filter[1].getElementsByTagName("select")[0].selectedIndex, value]);
+                    filtersArray.push([logic, option, logic, value]);
                 }
             }
             else{
+                //get the filter value
                 value = filter[1].getElementsByTagName("input")[0].value.toUpperCase();
                 if (value !== ""){
                     filtersArray.push([logic, option, value]);
@@ -102,36 +113,46 @@
         //2° Filter the taskTable
         for (i = 1; i < taskTable.length; i++){
             if(filtersArray.length === 0){
+                //by default, nothing is filtered
                 selected = true;
             }
             else{
                 selected = !filtersArray[0][0];
             }
+
+            //get the row i
             td = taskTable[i].cells;
+
+            //Apply each filter to the row
             selected = filtersArray.reduce((accumulator, currentValue) => {
+                //1° filter the row with the current filter
                 option = currentValue[1];
+                //get the line content
                 txtValue = td[option].textContent || td[option].innerText;
+                //compare the line content with the filter, depending on the value type (date, int, string)
                 if (isDate(option)){
-                    if (currentValue[2] == 0){
+                    if (currentValue[2] === 0){ //the user chooses before
                         logic = (new Date(Date.parse(txtValue))) <= currentValue[3];
                     }
-                    else{
+                    else{ //the user chooses after
                         logic = (new Date(Date.parse(txtValue))) >= currentValue[3];
                     }
                 }
-                else if(option === 4){
-                    if (currentValue[2] === 0){
+                else if(isInt(option)){
+                    if (currentValue[2] === 0){ //the user chooses before
                         logic = txtValue <= currentValue[3];
                     }
-                    else{
+                    else{ //the user chooses after
                         logic = txtValue >= currentValue[3];
                     }
                 }
                 else{
+                    //check if the line content contains the filter content
                     logic = txtValue.toUpperCase().indexOf(currentValue[2]) > -1;
                 }
 
-                if (currentValue[0] == 0){
+                //2° add the previous filter results to the current filter depending on the user choice ("and" or "or")
+                if (currentValue[0] === 0){
                     return accumulator && logic;
                 }
                 else{
@@ -139,6 +160,7 @@
                 }
             }, selected);
 
+            //hide or not the line depending on the filters result
             if(selected){
                 taskTable[i].style.display = "";
             }else{
@@ -147,47 +169,53 @@
         }
     }
 
+    //sort the taskTable : by default, it sorts ascending but if it is already sorted, sort descending
     function sort(n){
-        var table,rows,switching,i,x,y,shouldSwitch, dir, switchCount = 0
-        table = document.getElementById("taskTable");
+        let table,switching,i,x,y,shouldSwitch, dir, switchCount = 0;
+        //get the taskTable rows
+        table = document.getElementById("taskTable").rows;
+        //by default, sort ascending
         switching = true;
         dir = "asc";
         while (switching){
             switching = false;
-            rows = table.rows;
-            for (i = 1; i < (rows.length - 1); i++){
+            for (i = 1; i < (table.length - 1); i++){
                 shouldSwitch = false;
-                x = rows[i].cells[n].innerText.toLowerCase();
-                y = rows[i + 1].cells[n].innerText.toLowerCase();
+                //compare the i and i + 1 row, depending on the column's type (date or not)
+                x = table[i].cells[n].innerText.toLowerCase();
+                y = table[i + 1].cells[n].innerText.toLowerCase();
                 if (isDate(n)){
                     x = new Date(Date.parse(x));
                     y = new Date(Date.parse(y));
                 }
-                if (dir == "asc"){
+                if (dir === "asc"){
                     if (x > y) {
                         shouldSwitch = true;
                         break;
                     }
-                } else if (dir == "desc"){
+                } else if (dir === "desc"){
                     if (x < y){
                         shouldSwitch = true;
                         break;
                     }
                 }
             }
+            //switch the two lines if needed
             if (shouldSwitch) {
-                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                table[i].parentNode.insertBefore(table[i + 1], table[i]);
                 switching = true;
                 switchCount++;
             }
             else{
-                if (switchCount == 0 && dir == "asc"){
+                // the table is already ascending sorted: should sort descending
+                if (switchCount === 0 && dir === "asc"){
                     dir = "desc";
                     switching = true;
                 }
             }
         }
-        if (dir == "asc"){
+        //change the arrow's orientation
+        if (dir === "asc"){
             document.getElementById("th_" + n).className = "fas fa-chevron-up";
         }
         else{
@@ -196,55 +224,71 @@
     }
 
     function isDate(index){
-        return (index == 3 || index == 2);
+        return (index === 3 || index === 2);
     }
 
     function isInt(index){
-        return index == 4;
+        return index === 4;
     }
 
+    //add a filter (call when the addFilter button is clicked)
     function addFilter(){
-        var table = document.getElementById("filterTable");
-        var length = table.childNodes.length;
+        //get the filter table
+        const table = document.getElementById("filterTable");
+        const length = table.childNodes.length;
+        //if the filter is not empty, add the and/or button first
         if (length > 0) {
+            //by default, the div class have an empty string child
             if(table.childNodes[0].toString() === "[object Text]"){
                 table.removeChild(table.childNodes[0]);
             }
             else{
-                var logicCell = document.createElement("div");
+                //create a new div that contain a and/or selected button
+                let logicCell = document.createElement("div");
                 logicCell.innerHTML = "{{{logicFilter}}}";
                 logicCell.style.cssFloat = "left";
+                logicCell.className="logic";
                 table.appendChild(logicCell);
             }
         }
-        var cell = document.createElement("div");
+        //create a new div that contains the filter
+        let cell = document.createElement("div");
         cell.innerHTML = "{{{formatFilter }}}";
         cell.style.cssFloat = "left";
+        cell.className="filter";
         cell.getElementsByTagName("button")[0].onclick = suppressFilter;
         cell.getElementsByTagName("select")[0].onchange = choiceChanged;
         table.appendChild(cell);
     }
 
     function choiceChanged(){
-        var row = this.closest("table").rows[0];
-        if (isDate(row.cells[0].getElementsByTagName("select")[0].selectedIndex)){
-            if (row.cells.length == 3){
-                var cell = row.insertCell(1);
-                cell.innerHTML = "{{{dateFilter}}}";
+        //get the filter that should be changed
+        const row = this.closest("table").rows[0];
+
+        //change the option depending on the new filter type
+        const option = row.cells[0].getElementsByTagName("select")[0].selectedIndex;
+        if (isDate(option)){
+            //add a before/after choice if needed
+            if (row.cells.length === 3){
+                row.insertCell(1);
             }
+            row.cells[1].innerHTML = "{{{dateFilter}}}";
             row.cells[2].getElementsByTagName("input")[0].type = "date";
             row.cells[2].getElementsByTagName("input")[0].value = "";
         }
-        else if(row.cells[0].getElementsByTagName("select")[0].selectedIndex == 4){
-            if (row.cells.length == 3){
-                var cell = row.insertCell(1);
-                cell.innerHTML = "{{{dateFilter}}}";
+
+        else if(option){
+            //add a before/after choice if needed
+            if (row.cells.length === 3){
+                row.insertCell(1);
             }
+            row.cells[1].innerHTML = "{{{intFilter}}}";
             row.cells[2].getElementsByTagName("input")[0].type = "text";
             row.cells[2].getElementsByTagName("input")[0].value = "";
         }
         else{
-            if (row.cells.length == 4){
+            //delete the before/after if needed
+            if (row.cells.length === 4){
                 row.deleteCell(1);
             }
             row.cells[1].getElementsByTagName("input")[0].type = "text";
@@ -254,12 +298,16 @@
     }
 
     function suppressFilter(){
-        var previous =  this.closest("table").parentNode.previousSibling;
-        var next = this.closest("table").parentNode.nextSibling;
+        // get the previous and next element of the clicked filter
+        let previous =  this.closest("table").parentNode.previousSibling;
+        let next = this.closest("table").parentNode.nextSibling;
+        //remove the clicked filtered from the filterTable
         document.getElementById("filterTable").removeChild(this.closest("table").parentNode);
+        //if the clicked filter is not the first one, suppress the and/or button
         if (previous != null){
             document.getElementById("filterTable").removeChild(previous);
         }
+        //if the clicked filter is the first but not the only one, suppress the and/or button
         else if (next != null){
             document.getElementById("filterTable").removeChild(next);
         }
