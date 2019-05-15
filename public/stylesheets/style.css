@@ -42,7 +42,7 @@ a {
 }
 
 .menuIcon {
-  float: left;
+  float: right;
   font-size: large;
   color:#1a1aff;
 }
@@ -91,22 +91,9 @@ a {
   cursor: pointer;
 }
 
-#progressBar {
-  width: 100%;
-  background-color: grey;
-}
-
-#progressBG {
-  width: 1%;
-  height: 30px;
-  background-color: green;
-}
-
 /* Dropdown Button */
 .dropbtn {
-  background-color: #4CAF50;
   color: white;
-  padding: 16px;
   font-size: 16px;
   border: none;
 }
@@ -141,5 +128,6 @@ a {
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {display: block;}
 
-/* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .dropbtn {background-color: #3e8e41;}
+.tab-content{
+  margin-top: 5px;
+}

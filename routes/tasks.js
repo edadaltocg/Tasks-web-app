@@ -52,9 +52,12 @@ router.get('/new/:project_id', async (req, res) => {
 
     //Extracting all the status names from the database
     let status = await Status.find();
+    //Extracting all the priorities names from the database
+    let priorities = await Priority.find();
 
     res.render('taskForm', {
-        project: project, members: project.members, status: status,
+        project: project, members: project.members,
+        status: status, priorities : priorities,
         firstName: req.session.firstname, lastName: req.session.name
     });
 });

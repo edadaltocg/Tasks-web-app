@@ -6,6 +6,6 @@ const statusSchema = mongoose.Schema({
 });
 
 // Prepare a collection named 'statusess' (name has been chose to fit the existing collection)
-const statusModel = mongoose.model('Status', statusSchema,'statuses');
+const statusModel = mongoose.model('Status', statusSchema,'statusess');
 
 module.exports = statusModel;
