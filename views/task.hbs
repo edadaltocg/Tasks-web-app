@@ -39,19 +39,29 @@
 
 <!--task journal-->
 {{#if journal}}
-<table class="table">
-    <tr>
-        <th>History</th>
-        <th></th>
-    </tr>
-    {{#each journal}}
+    <table class="table">
         <tr>
-            <td>
-                <span class="badge badge-primary">{{this.author.firstname}} {{this.author.name}}</span>
-                <span class="date">{{formatDate this.date "long"}}</span>
-            </td>
-            <td>{{this.entry}}</td>
+            <th>History</th>
+            <th></th>
         </tr>
-    {{/each}}
-</table>
+        {{#each journal}}
+            <tr>
+                <td>
+                    <span class="badge badge-primary">{{this.author.firstname}} {{this.author.name}}</span>
+                    <span class="date">{{formatDate this.date "long"}}</span>
+                </td>
+                <td>{{this.entry}}</td>
+            </tr>
+        {{/each}}
+    </table>
 {{/if}}
+
+<form action="/task/post/{{task._id}}/journal" method="post">
+    <div>
+<textarea
+        name="entry" id="entry" style="font-family:sans-serif;font-size:1.2em;"
+        class="comment" placeholder="Say something...">
+</textarea>
+    </div>
+    <input type="submit" class="btn btn-primary" value="Comment">
+</form>

@@ -21,11 +21,13 @@ router.get('/settings', async (req, res) => {
     //console.log(statusData);
     let mainUser = await User.find({_id: req.session.userId});
 
-    if (mainUser[0].roles[0] == 'admin') { //maybe sort the vector
+    if (mainUser[0].roles[0] == 'admin') {
         let allUsers = await User.find();
-        console.log('admin');
+        let projectData = await Project.find()
+            .populate(membersPopulateQuery);
         //, mainuser: mainUser, allUsers
-        return res.render('settings', {title: 'CRUD Settings  page',
+        return res.render('settings', {
+            title: 'CRUD Settings  page',
             projects: projectData, statuses:statusData, users: allUsers,
             firstName: req.session.firstname, lastName: req.session.name
         });
