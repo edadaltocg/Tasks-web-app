@@ -1,4 +1,4 @@
-<h2>Summary</h2>
+<h1>Summary</h1>
 
 <!-- Nav tabs-->
 <ul class="nav nav-tabs" role="tablist">
@@ -11,7 +11,6 @@
     <li class="nav-item">
         <a class="nav-link" data-toggle="tab" href="#FinishedTasks">Finished Tasks</a>
     </li>
-
     <!-- Dropdown -->
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Project</a>
@@ -23,11 +22,11 @@
     </li>
 </ul>
 
-
+<!-- Tabs content -->
 <div class="tab-content">
     <!-- Projects summary :
         all the projects of the user-->
-    <div id="Projects" class="container tab-pane fade">
+    <div id="Projects" class="container tab-pane">
         <table class="table">
             <tr>
                 <th>Project</th>
@@ -58,15 +57,17 @@
                 <th>Due date</th>
                 <th>Advancement</th>
                 <th>Status</th>
+                <th>Priority</th>
             </tr>
             {{#each tasks}}
                 <tr>
                     <td>{{this.name}}</td>
                     <td>{{this.project.name}}</td>
-                    <td>{{formatDate this.start_date "long"}}</td>
-                    <td>{{formatDate this.due_date "long"}}</td>
-                    <td>{{this.advancement}}%</td>
-                    <td>{{this.status.name}}</td>
+                    <td class="date">{{formatDate this.start_date "long"}}</td>
+                    <td class="date">{{formatDate this.due_date "long"}}</td>
+                    <td style="text-align : center">{{this.advancement}}%</td>
+                    <td><span class="badge badge-warning">{{this.status.name}}</span></td>
+                    <td><span class="badge badge-danger">{{this.priority.name}}</span></td>
                 </tr>
             {{/each}}
         </table>
@@ -75,6 +76,7 @@
     <!-- Finished tasks summary :
         all the finished tasks assigned to the user-->
     <div id="FinishedTasks" class="container tab-pane fade">
+        {{#if finishedTasks}}
         <table class="table">
             <tr>
                 <th>Tasks</th>
@@ -82,17 +84,20 @@
                 <th>Start date</th>
                 <th>Due date</th>
                 <th>Status</th>
+                <th>Priority</th>
             </tr>
             {{#each finishedTasks}}
                 <tr>
                     <td>{{this.name}}</td>
                     <td>{{this.project.name}}</td>
-                    <td>{{formatDate this.start_date "long"}}</td>
-                    <td>{{formatDate this.due_date "long"}}</td>
-                    <td>{{this.status.name}}</td>
+                    <td class="date">{{formatDate this.start_date "long"}}</td>
+                    <td class="date">{{formatDate this.due_date "long"}}</td>
+                    <td><span class="badge badge-warning">{{this.status.name}}</span></td>
+                    <td><span class="badge badge-danger">{{this.priority.name}}</span></td>
                 </tr>
             {{/each}}
         </table>
+        {{/if}}
     </div>
 
     <!-- Project detail :
@@ -109,15 +114,17 @@
                 <th>Due date</th>
                 <th>Advancement</th>
                 <th>Status</th>
+                <th>Priority</th>
             </tr>
             {{#each this.tasks}}
-                <tr {{#ifeq this.assignee.id ../../userId}}bgcolor="#00FF00"{{/ifeq}}>
+                <tr {{#ifeq this.assignee.id ../../userId}}bgcolor="#e6e6ff"{{/ifeq}}>
                     <td>{{this.name}}</td>
                     <td><span class="badge badge-primary">{{this.assignee.firstname}} {{this.assignee.name}}</span></td>
-                    <td>{{formatDate this.start_date "long"}}</td>
-                    <td>{{formatDate this.due_date "long"}}</td>
-                    <td>{{this.advancement}}%</td>
-                    <td>{{this.status.name}}</td>
+                    <td class="date">{{formatDate this.start_date "long"}}</td>
+                    <td class="date">{{formatDate this.due_date "long"}}</td>
+                    <td style="text-align : center">{{this.advancement}}%</td>
+                    <td><span class="badge badge-warning">{{this.status.name}}</span></td>
+                    <td><span class="badge badge-danger">{{this.priority.name}}</span></td>
                 </tr>
             {{/each}}
         </table>
