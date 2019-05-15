@@ -32,8 +32,16 @@
         <td class="date">{{formatDate task.due_date "long"}}</td>
     </tr>
     <tr>
+        <th>Advancement</th>
+        <td>{{task.advancement}}%</td>
+    </tr>
+    <tr>
         <th>Status</th>
         <td>{{task.status.name}}</td>
+    </tr>
+    <tr>
+        <th>Priority</th>
+        <td>{{task.priority.name}}</td>
     </tr>
 </table>
 

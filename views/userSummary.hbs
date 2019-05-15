@@ -65,9 +65,7 @@
                     <td>{{this.project.name}}</td>
                     <td>{{formatDate this.start_date "long"}}</td>
                     <td>{{formatDate this.due_date "long"}}</td>
-                    <td><div id="progressBG">
-                        <div id="progressBar" style = "width:{{this.advancement}}"></div>
-                    </div></td>
+                    <td>{{this.advancement}}%</td>
                     <td>{{this.status.name}}</td>
                 </tr>
             {{/each}}
@@ -102,6 +100,7 @@
     {{#each projectTasksArray}}
     <div id="Project{{@index}}" class="container tab-pane fade">
         <h3>{{this.projectName}}</h3>
+        <p>Project advancement rate : {{this.projectAdvancement}}%</p>
         <table class="table">
             <tr>
                 <th>Tasks</th>
@@ -117,7 +116,7 @@
                     <td><span class="badge badge-primary">{{this.assignee.firstname}} {{this.assignee.name}}</span></td>
                     <td>{{formatDate this.start_date "long"}}</td>
                     <td>{{formatDate this.due_date "long"}}</td>
-                    <td><div</td>
+                    <td>{{this.advancement}}%</td>
                     <td>{{this.status.name}}</td>
                 </tr>
             {{/each}}
