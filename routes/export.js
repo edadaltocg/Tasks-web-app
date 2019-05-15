@@ -53,6 +53,9 @@ router.post('/tasks',async (req,res) => {
             case 'xmlFile':
                 await exportMethods.exportXML(req,res);
                 break;
+            case 'jsonFile':
+                await exportMethods.exportJSON(req,res);
+                break;
             default:
                 res.redirect('/projects');
                 return ;

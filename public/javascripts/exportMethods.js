@@ -2,7 +2,7 @@ const Project = require('../../models/projectModel');
 const Task = require('../../models/taskModel');
 const Journal = require('../../models/journalModel');
 const fs = require('fs');
-var builder = require('xmlbuilder');
+const Builder = require('xmlbuilder');
 
 module.exports = {
 
@@ -62,7 +62,7 @@ module.exports = {
 
     exportXML: async function (req,res) {
 
-        var xml = builder.create('projects');
+        var xml = Builder.create('projects');
         var projectsData = await Project.find({_id:req.session.exportProjects})
             .populate('members').catch((mongoError) => res.render('error', {error: mongoError}));
         for (var i = 0; i < projectsData.length; i++) {
@@ -92,10 +92,28 @@ module.exports = {
             }
             xml = xml.up();
         }
-
         var content = xml.end({pretty:true});
+        console.log(content);
         req.session.zipContent.push({content:content, name:'projects.xml'});
+    },
 
+    exportJSON:async function (req,res) {
+
+        var projectsData = await Project.find({_id:req.session.exportProjects},'name members')
+            .populate('members','-_id -__v -login -password').catch((mongoError) => res.render('error', {error: mongoError}));
+        var projectsDataClone = JSON.parse(JSON.stringify(projectsData));
+        for (var i=0; i<projectsData.length;i++) {
+            var tasksData = await Task.find({_id:Object.keys(req.body),project:projectsData[i]._id},'-__v -project')
+                .populate('assignee','-_id -__v -login -password').populate('status','-_id -__v').catch((mongoError) => res.render('error',{error:mongoError}));
+            projectsDataClone[i].tasks = JSON.parse(JSON.stringify(tasksData));
+            for (var j=0; j<tasksData.length;j++) {
+                var journalsData = await Journal.find({task:projectsDataClone[i].tasks[j]._id}).populate('author','-_id -__v -login -password').catch((mongoError) => res.render('error', {error: mongoError}));
+                projectsDataClone[i].tasks[j].journals = JSON.parse(JSON.stringify(journalsData));
+            }
+        }
+
+        console.log(JSON.stringify(projectsDataClone));
+        req.session.zipContent.push({content:JSON.stringify(projectsDataClone), name:'projects.json'});
 
     }
 
