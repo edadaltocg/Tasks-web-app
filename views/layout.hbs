@@ -27,14 +27,19 @@
     <p>A cool app to plan nice stuff</p>
 {{#if firstName}}
         <div class="border"></div>
-        <p>Welcome {{firstName}} {{lastName}}
-            <a href="/disconnect" title="Disconnect"><i class="fas fa-sign-out-alt bigIcon" title="Disconnect"></i></a>
-            <a href="/settings" title="Settings"><i class="icon fa fa-wrench fa-fw bigIcon" title="Settings"></i></a>
+        <p>Welcome {{firstName}} {{lastName}} </p>
 
-            <a href="/summary" title="Summary"><i class="fas fa-clipboard-list bigIcon" title="Summary"></i></a>
-
-        </p>
-    </div>
+        <!-- Menu -->
+        <div class="dropdown">
+            <button class="dropbtn"><i class="fas fa-bars"></i></button>
+            <div class="dropdown-content" style="float:right;">
+                <a href="/summary" title="Summary"><i class="fas fa-clipboard-list menuIcon" title="Summary"></i>Summary</a>
+                <a href="/graphs" title="Summary"><i class="fas fa-chart-bar menuIcon" title="Graphs"></i> Graphs</a>
+                <a href="/settings" title="Settings"><i class="icon fa fa-wrench fa-fw menuIcon"
+                                                        title="Settings"></i> Settings</a>
+                <a href="/disconnect" title="Disconnect"><i class="fas fa-sign-out-alt menuIcon" title="Disconnect"></i> Disconnect</a>
+            </div>
+        </div>
     </div>
 {{/if}}
 </div>

@@ -54,6 +54,7 @@
 <a href="/status/new">
     <i class="fas fa-plus-circle bigIcon" title="Add a status"></i>
 </a>
+
 <h2>Statuses</h2>
 
 <table class="table" class="fixed">
@@ -68,7 +69,33 @@
             <td>{{this.name}}</td>
             <td style="width: 5%"><a href="/status/update/{{this._id}}" title="Update status"><i
                     class="fas fa-edit"></i></a></td>
-            <td style="width: 5%"><a href="/status/remove/{{this._id}}" title="Remove user"><i
+            <td style="width: 5%"><a href="/status/remove/{{this._id}}" title="Remove status"><i
+                    class="fas fa-trash-alt"></i></a></td>
+        </tr>
+    {{/each}}
+</table>
+
+<div class="border"></div>
+
+<a href="/priority/new">
+    <i class="fas fa-plus-circle bigIcon" title="Add a priority"></i>
+</a>
+
+<h2>Priority</h2>
+
+<table class="table" class="fixed">
+    <tr>
+        <th>Name</th>
+        <th></th>
+        <th></th>
+
+    </tr>
+    {{#each priority}}
+        <tr>
+            <td>{{this.name}}</td>
+            <td style="width: 5%"><a href="/priority/update/{{this._id}}" title="Update priority"><i
+                    class="fas fa-edit"></i></a></td>
+            <td style="width: 5%"><a href="/priority/remove/{{this._id}}" title="Remove priority"><i
                     class="fas fa-trash-alt"></i></a></td>
         </tr>
     {{/each}}
