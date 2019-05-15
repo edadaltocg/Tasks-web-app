@@ -4,6 +4,7 @@ const Project = require('../models/projectModel')
 const Task = require('../models/taskModel');
 const Journal = require('../models/journalModel');
 const Status = require('../models/statusModel');
+const Priority = require('../models/priorityModel');
 
 const router = express.Router();
 
@@ -69,19 +70,20 @@ router.get('/update/:task_id', async (req, res) => {
     ;
 
     //Extracting the right task
-    let task = await Task.findOne({_id: taskFilter})
-        .populate([{path: 'assignee'}, {path: 'status'}]);
+    let task = await Task.findOne({_id : taskFilter})
+        .populate([{path : 'assignee'},{path : 'status'},{path : 'priority'}]);
     //Extracting all the members of the project
-    let project = await Project.findOne({_id: task.project})
-        .populate({path: 'members', select: 'name firstname'});
+    let project = await Project.findOne({_id : task.project})
+        .populate({path : 'members', select : 'name firstname'});
+
     //Extracting all the status names from the database
     let status = await Status.find();
+    //Extracting all the priorities names from the database
+    let priorities = await Priority.find();
 
-    res.render('taskForm', {
-        task: task, project: project,
-        members: project.members, status: status,
-        firstName: req.session.firstname, lastName: req.session.name
-    });
+    res.render('taskForm',{task : task, project : project,
+        members : project.members, status : status, priorities : priorities,
+        firstName : req.session.firstname , lastName : req.session.name});
 });
 
 /*POST newly added task or updated task, called when the Save button is clicked
@@ -124,7 +126,6 @@ router.get('/remove/:task_id', async (req, res) => {
             console.error('Not found', filter);
         }
     });
-    console.log(proj[0])
     res.redirect('/project/' + proj[0]._id);
 });
 
