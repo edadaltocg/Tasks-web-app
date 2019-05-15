@@ -10,13 +10,17 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "^4.16.4",
+    "express-easy-zip": "^1.1.4",
     "express-handlebars": "^3.0.2",
     "express-session": "^1.16.1",
+    "file-saver": "^2.0.1",
     "hbs": "~4.0.1",
     "highcharts": "^7.1.1",
     "http-errors": "~1.6.2",
+    "jszip": "^3.2.1",
     "moment": "^2.24.0",
     "mongoose": "^5.5.3",
-    "morgan": "~1.9.0"
+    "morgan": "~1.9.0",
+    "xmlbuilder": "^13.0.1"
   }
 }
