@@ -89,7 +89,7 @@
                 //search if the user have chosen "before" or "after"
                 logic = filter[1].getElementsByTagName("select")[0].selectedIndex;
                 if(value != null){
-                    filtersArray.push([logic, option, value]);
+                    filtersArray.push([logic, option, logic, value]);
                 }
             }
             else if (isInt(option)){
@@ -98,7 +98,8 @@
                 //search if the user have chosen "before" or "after"
                 logic = filter[1].getElementsByTagName("select")[0].selectedIndex;
                 if (value !== ""){
-                    filtersArray.push([logic, option, logic, parseInt(value, 10)]);
+                    value = parseInt(value, 10);
+                    filtersArray.push([logic, option, logic, value]);
                 }
             }
             else{
@@ -143,7 +144,7 @@
                         logic = parseInt(txtValue, 10) <= currentValue[3];
                     }
                     else{ //the user chooses after
-                        logic = parseInt(txtValue, 10) >= currentValue[3];
+                        logic = logic = parseInt(txtValue, 10) >= currentValue[3];
                     }
                 }
                 else{
@@ -280,7 +281,6 @@
             row.cells[2].getElementsByTagName("input")[0].type = "date";
             row.cells[2].getElementsByTagName("input")[0].value = "";
         }
-
         else if(isInt(option)){
             //add a before/after choice if needed
             if (row.cells.length === 3){
