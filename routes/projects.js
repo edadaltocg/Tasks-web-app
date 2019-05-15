@@ -11,7 +11,6 @@ const router = express.Router();
 router.get('/projects', async (req, res) => {
     //Extracting the projects of the user from the database
     let projectData = await Project.find({members: req.session.userId});
-    console.log(res.breadcrumb);
     res.render('projects', {
         projects: projectData,
         firstName: req.session.firstname, lastName: req.session.name
@@ -33,7 +32,6 @@ router.get('/project/new', async (req, res) => {
 router.post('/project/post/:par', async (req, res) => {
 
     if (req.params.par == 'new') {//No corresponding project has been found => Creating new project
-
         // create a new instance in memory from the message body
         let project = await new Project(req.body);
         // save a document to the database based on the instance content
@@ -47,7 +45,6 @@ router.post('/project/post/:par', async (req, res) => {
 
         //Loading the changes from the form
         let projectUpdates = req.body;
-        console.log(req.body);
         // update the task on the database
         await Project.updateOne(projectFilter, projectUpdates);
 

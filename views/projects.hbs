@@ -7,6 +7,7 @@
     </ol>
 </nav>
 
+<<<<<<< HEAD
 <h2>Projects</h2>
 <div class="col-sm-6" style="float:left">
     <ul>
@@ -39,4 +40,25 @@
     <div class="row menuProjectRow">
         <a href="/disconnect" title="Disconnect"><i class="fas fa-sign-out-alt menuProjectIcon" title="Disconnect"></i> Disconnect</a>
     </div>
+=======
+<table>
+    <a href="/project/new">
+        <i class="fas fa-plus-circle bigIcon" title="Add a project"></i>
+    </a>
+    <h2>Projects</h2>
+</table>
+
+<div class="tab-content">
+
+    <table class="table">
+        {{#each projects}}
+            <tr>
+                <th>
+                    <h4><a href="/project/{{this._id}}">{{this.name}}</a></h4>
+                </th>
+            </tr>
+        {{/each}}
+    </table>
+
+>>>>>>> 271bef66f0b8a187f09903c3d343fe834676c29a
 </div>
