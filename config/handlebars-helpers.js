@@ -58,28 +58,37 @@ var register = function() {
         },
 
         //Helper that displays a filter
-        formatFilter: function(date){
+        formatFilter: function(){
             var text =
                 "<table><tr>" +
-                "<td><select>" +
-                "<option>name</option>" +
+                "<td><select class='custom-select'>" +
+                "<option>title</option>" +
                 "<option>assignee</option>" +
                 "<option>start date</option>" +
                 "<option>due date</option>" +
                 "<option>advancement</option>" +
                 "<option>status</option>" +
                 "<option>priority</option></select></td>" +
-                "<td><input type=name class=form-control name=name onchange=filter() onkeyup='filter()' placeholder='Enter a filter'></td>" +
-                "<td><button class='fas fa-times' onchange='suppressFilter'></button></td>" +
+                "<td><input type=name class=form-control name=name placeholder='Enter a filter'></td>" +
+                "<td><button class='fas fa-times'></button></td>" +
                 "</tr></table>";
             return text;
         },
 
         dateFilter: function(){
             var text =
-                "<select onchange='filter()'>" +
+                "<select class='custom-select' onchange='filter()'>" +
                 "<option>before</option>" +
                 "<option>after</option>" +
+                "</select>"
+            return text;
+        },
+
+        intFilter: function(){
+            var text =
+                "<select class='custom-select' onchange='filter()'>" +
+                "<option><</option>" +
+                "<option>></option>" +
                 "</select>"
             return text;
         },
