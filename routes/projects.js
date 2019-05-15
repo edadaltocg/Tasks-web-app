@@ -2,6 +2,7 @@ const express = require('express');
 const Project = require('../models/projectModel');
 const Task = require('../models/taskModel');
 const User = require('../models/userModel');
+const Status = require('../models/statusModel')
 
 const router = express.Router();
 
@@ -73,9 +74,9 @@ router.get('/project/:project_id', async (req, res) => {
     //Extracting the project of the user from the database
     let project = await Project.findOne({_id: projectFilter});
     //Extracting the tasks of the user's project from the database
+    let taskPopulateQuery = [{path : 'assignee', select : 'name firstname'},{path : 'status', select : 'name'}];
     let tasks = await Task.find({project: projectFilter})
-        .populate({path: 'assignee', select: 'name firstname'});
-
+        .populate(taskPopulateQuery);
     res.render('project', {
         project: project, tasks: tasks,
         firstName: req.session.firstname, lastName: req.session.name

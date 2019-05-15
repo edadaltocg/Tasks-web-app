@@ -23,7 +23,7 @@ var register = function() {
             if (moment) {
                 // can use other formats like 'lll' too
                 format = DateFormats[format] || format;
-                return moment(datetime).format(format);
+                return moment.utc(datetime).format(format);
             } else {
                 return datetime(baseValue, loopValue);
             }
@@ -65,7 +65,8 @@ var register = function() {
                 "<option>name</option>" +
                 "<option>assignee</option>" +
                 "<option>start date</option>" +
-                "<option>due date</option></select></td>" +
+                "<option>due date</option>" +
+                "<option>status</option></select></td>" +
                 "<td><input type=name class=form-control name=name onchange=filter() onkeyup='filter()' placeholder='Enter a filter'></td>" +
                 "<td><button class='fas fa-times' onchange='suppressFilter'></button></td>" +
                 "</tr></table>";
@@ -88,10 +89,23 @@ var register = function() {
                 "<option>or</option>" +
                 "</select>"
             return text;
-        }
+        },
 
+        eq: function(a,b,options){
 
-    };
+            if(a.equals(b)){
+                return options.fn(this)
+            }
+            else{
+                return options.inverse(this)
+            }
+        },
+
+        testDate: function(test){
+            return test.getTime();
+        },
+
+    }
 
     if (Handlebars && typeof Handlebars.registerHelper === "function") {
         // register helpers
@@ -103,7 +117,6 @@ var register = function() {
         return helpers;
     }
 };
-
 
 module.exports.register = register;
 module.exports.helpers = register(null);

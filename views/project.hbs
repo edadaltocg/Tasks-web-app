@@ -28,10 +28,11 @@
 
 <table class="table" id="taskTable">
     <tr>
-        <th>Title</th>
-        <th>Assignee</th>
-        <th>Start date</th>
-        <th>Due date</th>
+        <th>Title <p id="th_0" onclick="sort(0)" style="cursor: pointer" class = "fas fa-chevron-down"/></th>
+        <th>Assignee <p id="th_1" onclick="sort(1)" style="cursor: pointer" class = "fas fa-chevron-down"/></th>
+        <th>Start date <p id="th_2" onclick="sort(2)" style="cursor: pointer" class = "fas fa-chevron-down"/></th>
+        <th>Due date <p id="th_3" onclick="sort(3)" style="cursor: pointer" class = "fas fa-chevron-down"/></th>
+        <th>Status <p id="th_4" onclick="sort(4)" style="cursor: pointer" class = "fas fa-chevron-down"/></th>
         <th></th>
     </tr>
     {{#each tasks}}
@@ -40,6 +41,7 @@
             <td><span class="badge badge-primary">{{this.assignee.firstname}} {{this.assignee.name}}</span></td>
             <td class="date">{{formatDate this.start_date "long"}}</td>
             <td class="date">{{formatDate this.due_date "long"}}</td>
+            <td><span class="badge badge-warning"/>{{this.status.name}}</td>
             <td><a href="/task/update/{{this._id}}" title="Update task"><i class="fas fa-edit"></i></a></td>
             <td><a href="/task/remove/{{this._id}}" title="Remove task"><i class="fas fa-trash-alt"></i></a></td>
         </tr>
@@ -117,6 +119,54 @@
             }else{
                 tr[i].style.display = "none";
             }
+        }
+    }
+
+    function sort(n){
+        var table,rows,switching,i,x,y,shouldSwitch, dir, switchCount = 0
+        table = document.getElementById("taskTable");
+        switching = true;
+        dir = "asc";
+        while (switching){
+            switching = false;
+            rows = table.rows;
+            for (i = 1; i < (rows.length - 1); i++){
+                shouldSwitch = false;
+                x = rows[i].cells[n].innerText.toLowerCase();
+                y = rows[i + 1].cells[n].innerText.toLowerCase();
+                if (isDate(n)){
+                    x = new Date(Date.parse(x));
+                    y = new Date(Date.parse(y));
+                }
+                if (dir == "asc"){
+                    if (x > y) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else if (dir == "desc"){
+                    if (x < y){
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                switchCount++;
+            }
+            else{
+                if (switchCount == 0 && dir == "asc"){
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
+        if (dir == "asc"){
+            document.getElementById("th_" + n).className = "fas fa-chevron-up";
+        }
+        else{
+            document.getElementById("th_" + n).className = "fas fa-chevron-down";
         }
     }
 

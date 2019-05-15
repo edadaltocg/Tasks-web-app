@@ -42,6 +42,7 @@ var disconnectRouter = require('./routes/disconnect');
 var settingsRouter = require('./routes/settings');
 var statusRouter = require('./routes/status');
 var usersRouter = require('./routes/users');
+var graphRouter = require('./routes/userGraphs');
 
 // setting up the routers
 app.use('/', indexRouter);
@@ -53,6 +54,7 @@ app.use('/disconnect', disconnectRouter);
 app.use('/', settingsRouter);
 app.use('/', statusRouter);
 app.use('/', usersRouter);
+app.use('/graphs', graphRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

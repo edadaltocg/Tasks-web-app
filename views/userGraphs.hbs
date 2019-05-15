@@ -1,0 +1,299 @@
+<script src="https://code.highcharts.com/gantt/highcharts-gantt.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+
+<!-- Nav tabs-->
+<ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#Projects">Projects</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#Tasks">Tasks</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#Users">Users</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#Actions">Activities</a>
+    </li>
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Project</a>
+        <div class="dropdown-menu">
+            {{#each projects}}
+                <a class="dropdown-item" data-toggle="tab" href="#Project{{@index}}" onclick="getProjectTasks(this._id)">{{this.name}}</a>
+            {{/each}}
+        </div>
+    </li>
+</ul>
+</ul>
+
+<!-- Charts' containers -->
+<div id="containers" class="tab-content">
+    <div id="Projects" class="container tab-pane fade">
+        <div id="project/task" style="float: left; width: 50%;"></div>
+        <div id="project/action" style="float: left; width: 50%;"></div>
+    </div>
+    <div id="Tasks" class="container tab-pane fade">
+        <div id="gantt"></div>
+    </div>
+    <div id="Users" class="container tab-pane fade">
+        <div id="user/task" style="height: 300px;  margin-top: 20px; float: left; width: 50%;"></div>
+        <div id="user/action" style="height: 300px; margin-top: 20px; float: left; width: 50%;"></div>
+    </div>
+    <div id="Actions" class="container tab-pane fade">
+        <div id="test"></div>
+        <div id="activityUser"></div>
+        <div id="activityDate"></div>
+    </div>
+    {{#each projectTasksArray}}
+        <div id="Project{{@index}}" class="container tab-pane fade">
+            <div id="gantt + {{this._id}}"></div>
+        </div>
+    {{/each}}
+</div>
+
+<script>
+
+    // Create 2 spider charts containing the number of tasks and actions of each project
+    let projectsName = [];
+    let ntask;
+    let nbTask = [];
+    let nbAction = [];
+    {{#each projects}}
+        projectsName.push("{{this.name}}".replace(new RegExp("&"+"#"+"x27;", "g"), "'"));
+        ntask = 0;
+        {{#each ../tasks}}
+                {{#eq this.project ../this.id}}
+                ntask += 1;
+                {{/eq}}
+        {{/each}}
+        nbTask.push(ntask);
+        ntask = 0;
+        {{#each ../journals}}
+                {{#eq this.task.project ../this.id}} ntask += 1; {{/eq}}
+        {{/each}}
+        nbAction.push(ntask);
+    {{/each}}
+
+    spider('project/task', 'Number of tasks', projectsName, nbTask);
+
+    spider('project/action', 'Number of actions',projectsName, nbAction);
+
+
+    //Create 2 spider charts containing the number of tasks and actions of each user
+    let userName = [];
+    let nbTaskUser = [];
+    let nbActionUser = [];
+    {{#each users}}
+        userName.push("{{this.firstname}}" + " " + "{{this.name}}");
+        ntask = 0;
+        {{#each ../tasks}}
+            {{#eq this.assignee ../this.id}} ntask += 1; {{/eq}}
+        {{/each}}
+        nbTaskUser.push(ntask);
+
+        ntask = 0;
+        {{#each ../journals}}
+            {{#eq this.author ../this.id}} ntask += 1; {{/eq}}
+        {{/each}}
+        nbActionUser.push(ntask);
+    {{/each}}
+
+    spider('user/task', 'Number of tasks', userName, nbTaskUser);
+
+    spider('user/action', 'Number of actions',userName, nbActionUser);
+
+
+    //Create a GANTT chart that locates the tasks
+    let data = [];
+    let subdata;
+    {{#each projects}}
+        subdata = [];
+        {{#each ../tasks}}
+            {{#eq this.project ../this.id}}
+                subdata.push({
+                    name: "{{this.name}}",
+                    start: {{testDate this.start_date}},
+                    end: {{testDate this.due_date}},
+                });
+            {{/eq}}
+        {{/each}}
+        data.push({
+            name: "{{this.name}}".replace(new RegExp("&"+"#"+"x27;", "g"), "'"),
+            data: subdata,
+        });
+    {{/each}}
+
+    Highcharts.ganttChart('gantt', {
+        title: {
+            text: 'Gantt Chart'
+        },
+
+        series: data,
+    });
+
+
+    //Create an activity diagram representing the number of actions done by tasks and by users
+    let nbActions;
+    let nb = [];
+    {{#each tasks}}
+          nbActions = [];
+                {{#each ../users}}
+                ntask = 0;
+                {{#each ../../journals}}
+                    {{#eq this.author ../this.id}}
+                        {{#eq this.task ../../this.id}}
+                        ntask +=1;
+                        {{/eq}}
+                    {{/eq}}
+                {{/each}}
+            nbActions.push(ntask);
+
+            {{/each}}
+        ntask = {"name" : "{{this.name}}", "data" : nbActions};
+        nb.push(ntask);
+        {{/each}}
+
+    Highcharts.chart('activityUser', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Activity diagram: number of actions done by task and by user'
+        },
+        xAxis: {
+            categories: userName,
+        },
+        credits: {
+            enabled: false
+        },
+        series: nb
+    });
+
+
+    //Create an activity diagram representing the actions on a time scale
+    //1° set the data format: [year, month, day] and sort the dates
+
+    let donnees;
+    let dataArray = [];
+    {{#each projects}}
+        donnees = [];
+        {{#each ../journals}}
+            {{#eq this.task.project ../this.id}}
+                data = "{{formatDate this.date htmlInput}}";
+                donnees.push(data);
+            {{/eq}}
+        {{/each}}
+        dataArray.push({
+            name: "{{this.name}}".replace(new RegExp("&"+"#"+"x27;", "g"), "'"),
+            type: "column",
+            pointPlacement: "between",
+            data: setData(donnees),
+        });
+    {{/each}}
+
+    Highcharts.chart('activityDate', {
+        title: {
+            text: 'Activity diagram: number of actions on a time scale'
+        },
+        xAxis: {
+            showLastLabel: true,
+            type: 'datetime',
+            dateTimeLabelFormats: {
+                month: '%e. %b',
+                year: '%b'
+            },
+            tickmarkPlacement: 'between'
+        },
+        series: dataArray,
+    });
+
+
+    function getWeekNumber(d) {
+        d = new Date(d[0], d[1] - 1, d[2]);
+        // Set to nearest Thursday: current date + 4 - current day number
+        // Make Sunday's day number 7
+        d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+        // Get first day of year
+        const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+        // Calculate full weeks to nearest Thursday
+        const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        // Return array of year and week number
+        return [d.getUTCFullYear(), weekNo];
+    }
+
+    function setData(dataArray){
+        var donnees = dataArray.map(x => x.split("T")[0].split("-"));
+        var data = [];
+        donnees.forEach(x => {data.push([x[0], x[1], x[2], 1]);});
+
+        data = data.map(function(p) {
+            return {
+                x: Date.UTC(p[0], p[1] - 1, p[2]),
+                y: p[3],
+                raw: p
+            };
+        });
+        data.sort((a, b) => a.x - b.x);
+
+        //2° gather the actions done the same week
+        let dataYears = [];
+        data.forEach(function (p) {
+            const d = getWeekNumber((p.raw));
+            let year = dataYears.find((y) => (d[0] === y[0][0] && d[1] === y[0][1]));
+            if (year) {
+                year[1] += p.y
+            } else {
+                dataYears.push([[d[0], d[1], p.raw], p.y]);
+            }
+        });
+
+        //3° change the date to the Monday's date
+        dataYears.forEach((y) => {
+            let data = new Date(y[0][2][0], y[0][2][1]-1, y[0][2][2]);
+            const day = data.getDate() - (data.getDay()+6)%7;
+            data = new Date(y[0][2][0], y[0][2][1]-1, day);
+            y[0] = Date.UTC(data.getFullYear(), data.getMonth(), data.getDate());
+        });
+        return dataYears;
+    }
+
+
+    function spider(id, title, x, y) {
+        Highcharts.chart(id, {
+            chart: {
+                polar: true,
+                type: 'line'
+            },
+            credits: {
+                enabled: false
+            },
+            title: {
+                text: title,
+                y: 5,
+            },
+            pane: {
+                size: '90%'
+            },
+            xAxis: {
+                categories: x,
+                tickmarkPlacement: 'on',
+                lineWidth: 0
+            },
+
+            yAxis: {
+                gridLineInterpolation: 'polygon',
+                lineWidth: 0,
+                allowDecimals: false,
+            },
+            legend: {
+                enabled: false
+            },
+            series: [{
+                name: title,
+                data: y,
+                pointPlacement: 'on'
+            }],
+        });
+    }
+</script>
