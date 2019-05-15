@@ -1,0 +1,12 @@
+<h1>
+    export {{object}}
+</h1>
+
+<div>
+    <form action="/export/{{object}}" method="post">
+        {{#each choices}}
+            <input type="checkbox" name="{{this._id}}" value="selected">{{this.name}}<br>
+        {{/each}}
+        <button type="submit" class="btn btn-primary">confirm</button>
+    </form>
+</div>
