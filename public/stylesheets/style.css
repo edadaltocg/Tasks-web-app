@@ -47,6 +47,33 @@ a {
   color:#1a1aff;
 }
 
+.menuProject{
+  padding: 20px;
+  padding-left: 20px;
+  float:right;
+  border:double;
+  background-color: #f0f0f0;
+  border-radius: 15px;
+}
+
+.menuProjectIcon {
+  float: left;
+  font-size: xx-large;
+  color:#1a1aff;
+}
+
+.menuProjectRow{
+  margin : 20px;
+}
+
+.projectList{
+  margin-left: -18px;
+  margin-top: 20px;
+  font-size: large;
+  font-weight: bolder;
+  list-style-type: none;
+}
+
 .date {
   font-style: italic;
 }

@@ -8,9 +8,35 @@
 </nav>
 
 <h2>Projects</h2>
-<ul>
-<ul>
-    {{#each projects}}
-        <li><a href="/project/{{this._id}}">{{this.name}}</li>
-    {{/each}}
-</ul>
+<div class="col-sm-6" style="float:left">
+    <ul>
+        {{#each projects}}
+            <li class="projectList"><a href="/project/{{this._id}}">{{this.name}}</li>
+        {{/each}}
+    </ul>
+</div>
+<div class="col-sm-4 menuProject">
+    <div class="row menuProjectRow">
+        <div class="col-sm-4">
+            <a href="/projects" title="Projects"><i class="fas fa-list menuProjectIcon" title="Projects"></i></a>
+        </div>
+        <div class="col-sm-2">
+        <a href="/projects" title="Projects"><div style="my-auto">Projects</div></a>
+        </div>
+    </div>
+    <div class="row menuProjectRow">
+        <a href="/summary" title="Summary"><i class="fas fa-clipboard-list menuProjectIcon" title="Summary"></i>Summary</a>
+    </div>
+    <div class="row menuProjectRow">
+        <a href="/graphs" title="Graphs"><i class="fas fa-chart-bar menuProjectIcon" title="Graphs"></i> Graphs</a>
+    </div>
+    <div class="row menuProjectRow">
+        <a href="/export" title="Export"><i class="fas fa-file-export menuProjectIcon" title="Export"></i> Export</a>
+    </div>
+    <div class="row menuProjectRow">
+        <a href="/settings" title="Settings"><i class="icon fa fa-wrench fa-fw menuProjectIcon" title="Settings"></i> Settings</a>
+    </div>
+    <div class="row menuProjectRow">
+        <a href="/disconnect" title="Disconnect"><i class="fas fa-sign-out-alt menuProjectIcon" title="Disconnect"></i> Disconnect</a>
+    </div>
+</div>
