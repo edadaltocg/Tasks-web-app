@@ -10,86 +10,105 @@
     </ol>
 </nav>
 
-<button onclick=addFilter()>Add filter </button>
-<div id="filterTable">
-</div>
+<!-- filter space -->
+<!-- Add a filter button -->
+<button type="button" class="btn btn-primary" onclick=addFilter()>Add filter </button>
+<!-- filter table -->
+<div id="filterTable"></div>
 
-<!--Add a task button-->
 <table style="width:100%">
     <tr>
         <td>
             <h2>{{project.name}}</h2>
         </td>
         <td>
-            <a href="/task/new/{{project._id}}" style="align:right"><i class="fas fa-plus-circle bigIcon" title="Add a task"> </i></a>
+            <!--Add a task button-->
+            <a href="/task/new/{{project._id}}"><i class="fas fa-plus-circle bigIcon" title="Add a task"> </i></a>
         </td>
     </tr>
 </table>
 
+<!-- Table with all the tasks-->
 <table class="table" id="taskTable">
     <tr>
-        <th>Title</th>
-        <th>Assignee</th>
-        <th>Start date</th>
-        <th>Due date</th>
+        <th>Title <p id="th_0" onclick="sort(0)" style="cursor: pointer" class = "fas fa-chevron-down"></p></th>
+        <th>Assignee <p id="th_1" onclick="sort(1)" style="cursor: pointer" class = "fas fa-chevron-down"></p></th>
+        <th>Start date <p id="th_2" onclick="sort(2)" style="cursor: pointer" class = "fas fa-chevron-down"></p></th>
+        <th>Due date <p id="th_3" onclick="sort(3)" style="cursor: pointer" class = "fas fa-chevron-down"></p></th>
+        <th>Advancement <p id="th_4" onclick="sort(4)" style="cursor: pointer" class = "fas fa-chevron-down"></p></th>
+        <th>Status <p id="th_5" onclick="sort(5)" style="cursor: pointer" class = "fas fa-chevron-down"></p></th>
+        <th>Priority <p id="th_6" onclick="sort(6)" style="cursor: pointer" class = "fas fa-chevron-down"></p></th>
         <th></th>
     </tr>
     {{#each tasks}}
         <tr>
             <td><a href="/task/{{this._id}}">{{this.name}}</a></td>
             <td><span class="badge badge-primary">{{this.assignee.firstname}} {{this.assignee.name}}</span></td>
-            <td class="date">{{formatDate this.start_date "long"}}</td>
-            <td class="date">{{formatDate this.due_date "long"}}</td>
-            <td><a href="/task/update/{{this._id}}" title="Update task"><i class="fas fa-edit"></i></a></td>
-            <td><a href="/task/remove/{{this._id}}" title="Remove task"><i class="fas fa-trash-alt"></i></a></td>
+            <td style="text-align: center" class="date">{{formatDate this.start_date "long"}}</td>
+            <td style="text-align: center" class="date">{{formatDate this.due_date "long"}}</td>
+            <td style="text-align: center">{{this.advancement}}%</td>
+            <td><span class="badge badge-warning">{{this.status.name}}</span></td>
+            <td style="text-align: center"><span class="badge badge-danger">{{this.priority.name}}</span></td>
+            <td style="text-align: center"><a href="/task/update/{{this._id}}" title="Update task"><i class="fas fa-edit"></i></a></td>
+            <td style="text-align: center"><a href="/task/remove/{{this._id}}" title="Remove task"><i class="fas fa-trash-alt"></i></a></td>
         </tr>
     {{/each}}
 </table>
-<p id="test"></p>
+
+
 <script>
+    //Fonction that generate the filter
     function filter(){
-        var i, td, txtValue,j, option, filter, selected, date, assignee, logic;
+        let i, td, txtValue,j, option, filter, selected, value, logic;
         const filterTable = document.getElementById("filterTable");
-        const table = document.getElementById("taskTable");
-        const tr = table.rows;
+        const taskTable = document.getElementById("taskTable").rows;
         const filters = filterTable.childNodes;
-        const filtres = new Array();
+        const filtersArray = [];
+
+        //1° Convert the filterTable into an arrayFilter
         for (j = 0; j < filters.length; j = j+2){
             filter = filters[j].getElementsByTagName("table")[0].rows[0].cells;
             option = filter[0].getElementsByTagName("select")[0].selectedIndex;
+            //search if the user have chosen "and" or "or" (or by default for the first filter)
             if (j > 0){
                 logic = filters[j-1].getElementsByTagName("select")[0].selectedIndex;
             }
             else{
                 logic = 1;
             }
+
+            //get the filter value and add the info the filterArray
             if (isDate(option)){
-                date = filter[2].getElementsByTagName("input")[0].valueAsDate;
-                if(date != null){
-                    filtres.push([logic, option, filter[1].getElementsByTagName("select")[0].selectedIndex, date]);
+                value = filter[2].getElementsByTagName("input")[0].valueAsDate;
+                if(value != null){
+                    filtersArray.push([logic, option, filter[1].getElementsByTagName("select")[0].selectedIndex, value]);
+                }
+            }
+            else if (isInt(option)){
+                value = filter[2].getElementsByTagName("input")[0].value;
+                document.getElementById("test").innerText = value;
+                if (value !== ""){
+                    filtersArray.push([logic, option, filter[1].getElementsByTagName("select")[0].selectedIndex, value]);
                 }
             }
             else{
-                assignee = filter[1].getElementsByTagName("input")[0].value.toUpperCase();
-                if (assignee != ""){
-                    filtres.push([logic, option, assignee]);
+                value = filter[1].getElementsByTagName("input")[0].value.toUpperCase();
+                if (value !== ""){
+                    filtersArray.push([logic, option, value]);
                 }
             }
         }
-        for (i = 1; i < tr.length; i++){
-            if(filtres.length == 0){
+
+        //2° Filter the taskTable
+        for (i = 1; i < taskTable.length; i++){
+            if(filtersArray.length === 0){
                 selected = true;
             }
             else{
-                if(filtres[0][0] == 0){
-                    selected = true;
-                }
-                else{
-                    selected = false;
-                }
+                selected = !filtersArray[0][0];
             }
-            td = tr[i].cells;
-            selected = filtres.reduce((accumulator, currentValue) => {
+            td = taskTable[i].cells;
+            selected = filtersArray.reduce((accumulator, currentValue) => {
                 option = currentValue[1];
                 txtValue = td[option].textContent || td[option].innerText;
                 if (isDate(option)){
@@ -98,6 +117,14 @@
                     }
                     else{
                         logic = (new Date(Date.parse(txtValue))) >= currentValue[3];
+                    }
+                }
+                else if(option === 4){
+                    if (currentValue[2] === 0){
+                        logic = txtValue <= currentValue[3];
+                    }
+                    else{
+                        logic = txtValue >= currentValue[3];
                     }
                 }
                 else{
@@ -113,15 +140,67 @@
             }, selected);
 
             if(selected){
-                tr[i].style.display = "";
+                taskTable[i].style.display = "";
             }else{
-                tr[i].style.display = "none";
+                taskTable[i].style.display = "none";
             }
+        }
+    }
+
+    function sort(n){
+        var table,rows,switching,i,x,y,shouldSwitch, dir, switchCount = 0
+        table = document.getElementById("taskTable");
+        switching = true;
+        dir = "asc";
+        while (switching){
+            switching = false;
+            rows = table.rows;
+            for (i = 1; i < (rows.length - 1); i++){
+                shouldSwitch = false;
+                x = rows[i].cells[n].innerText.toLowerCase();
+                y = rows[i + 1].cells[n].innerText.toLowerCase();
+                if (isDate(n)){
+                    x = new Date(Date.parse(x));
+                    y = new Date(Date.parse(y));
+                }
+                if (dir == "asc"){
+                    if (x > y) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else if (dir == "desc"){
+                    if (x < y){
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                switchCount++;
+            }
+            else{
+                if (switchCount == 0 && dir == "asc"){
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
+        if (dir == "asc"){
+            document.getElementById("th_" + n).className = "fas fa-chevron-up";
+        }
+        else{
+            document.getElementById("th_" + n).className = "fas fa-chevron-down";
         }
     }
 
     function isDate(index){
         return (index == 3 || index == 2);
+    }
+
+    function isInt(index){
+        return index == 4;
     }
 
     function addFilter(){
@@ -154,6 +233,14 @@
                 cell.innerHTML = "{{{dateFilter}}}";
             }
             row.cells[2].getElementsByTagName("input")[0].type = "date";
+            row.cells[2].getElementsByTagName("input")[0].value = "";
+        }
+        else if(row.cells[0].getElementsByTagName("select")[0].selectedIndex == 4){
+            if (row.cells.length == 3){
+                var cell = row.insertCell(1);
+                cell.innerHTML = "{{{dateFilter}}}";
+            }
+            row.cells[2].getElementsByTagName("input")[0].type = "text";
             row.cells[2].getElementsByTagName("input")[0].value = "";
         }
         else{
