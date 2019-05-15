@@ -7,10 +7,23 @@
     </ol>
 </nav>
 
-<h2>Projects</h2>
-<ul>
-<ul>
-    {{#each projects}}
-        <li><a href="/project/{{this._id}}">{{this.name}}</li>
-    {{/each}}
-</ul>
+<table>
+    <a href="/project/new">
+        <i class="fas fa-plus-circle bigIcon" title="Add a project"></i>
+    </a>
+    <h2>Projects</h2>
+</table>
+
+<div class="tab-content">
+
+    <table class="table">
+        {{#each projects}}
+            <tr>
+                <th>
+                    <h4><a href="/project/{{this._id}}">{{this.name}}</a></h4>
+                </th>
+            </tr>
+        {{/each}}
+    </table>
+
+</div>

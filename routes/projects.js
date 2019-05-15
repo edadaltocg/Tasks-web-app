@@ -33,7 +33,6 @@ router.get('/project/new', async (req, res) => {
 router.post('/project/post/:par', async (req, res) => {
 
     if (req.params.par == 'new') {//No corresponding project has been found => Creating new project
-
         // create a new instance in memory from the message body
         let project = await new Project(req.body);
         // save a document to the database based on the instance content
