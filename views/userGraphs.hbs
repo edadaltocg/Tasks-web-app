@@ -16,15 +16,6 @@
     <li class="nav-item">
         <a class="nav-link" data-toggle="tab" href="#Actions">Activities</a>
     </li>
-    <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Project</a>
-        <div class="dropdown-menu">
-            {{#each projects}}
-                <a class="dropdown-item" data-toggle="tab" href="#Project{{@index}}" onclick="getProjectTasks(this._id)">{{this.name}}</a>
-            {{/each}}
-        </div>
-    </li>
-</ul>
 </ul>
 
 <!-- Charts' containers -->
@@ -45,11 +36,6 @@
         <div id="activityUser"></div>
         <div id="activityDate"></div>
     </div>
-    {{#each projectTasksArray}}
-        <div id="Project{{@index}}" class="container tab-pane fade">
-            <div id="gantt + {{this._id}}"></div>
-        </div>
-    {{/each}}
 </div>
 
 <script>
@@ -64,7 +50,7 @@
         ntask = 0;
         {{#each ../tasks}}
                 {{#eq this.project ../this.id}}
-                ntask += 1;
+                    ntask += 1;
                 {{/eq}}
         {{/each}}
         nbTask.push(ntask);
@@ -115,6 +101,7 @@
                     name: "{{this.name}}",
                     start: {{testDate this.start_date}},
                     end: {{testDate this.due_date}},
+                    completed: {{#if this.advancement}}{{this.advancement}}/100{{else}}0{{/if}},
                 });
             {{/eq}}
         {{/each}}
@@ -125,6 +112,9 @@
     {{/each}}
 
     Highcharts.ganttChart('gantt', {
+        credits: {
+            enabled: false
+        },
         title: {
             text: 'Gantt Chart'
         },
@@ -157,6 +147,9 @@
     Highcharts.chart('activityUser', {
         chart: {
             type: 'column'
+        },
+        credits: {
+            enabled: false
         },
         title: {
             text: 'Activity diagram: number of actions done by task and by user'
@@ -196,6 +189,9 @@
         title: {
             text: 'Activity diagram: number of actions on a time scale'
         },
+        credits: {
+            enabled: false
+        },
         xAxis: {
             showLastLabel: true,
             type: 'datetime',
@@ -223,8 +219,8 @@
     }
 
     function setData(dataArray){
-        var donnees = dataArray.map(x => x.split("T")[0].split("-"));
-        var data = [];
+        const donnees = dataArray.map(x => x.split("T")[0].split("-"));
+        let data = [];
         donnees.forEach(x => {data.push([x[0], x[1], x[2], 1]);});
 
         data = data.map(function(p) {

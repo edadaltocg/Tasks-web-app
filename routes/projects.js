@@ -74,7 +74,7 @@ router.get('/project/:project_id', async (req, res) => {
     //Extracting the project of the user from the database
     let project = await Project.findOne({_id: projectFilter});
     //Extracting the tasks of the user's project from the database
-    let taskPopulateQuery = [{path : 'assignee', select : 'name firstname'},{path : 'status', select : 'name'}];
+    let taskPopulateQuery = [{path : 'assignee', select : 'name firstname'},{path : 'status', select : 'name'}, {path: 'priority', select : 'name'}];
     let tasks = await Task.find({project: projectFilter})
         .populate(taskPopulateQuery);
     res.render('project', {
