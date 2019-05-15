@@ -15,7 +15,8 @@ router.get('/', async(req, res) => {
 
     let taskPopulateQuery = [{path : 'project', select : 'name'},
         {path : 'status', select : 'name'},
-        {path : 'assignee', select : 'name firstname'}];
+        {path : 'priority', select : 'name firstname'},
+        {path : 'assignee', select : 'name firstname'},];
     let tasks = await Task.find({assignee : req.session.userId})
         .populate(taskPopulateQuery);
 

@@ -58,15 +58,17 @@
                 <th>Due date</th>
                 <th>Advancement</th>
                 <th>Status</th>
+                <th>Priority</th>
             </tr>
             {{#each tasks}}
                 <tr>
                     <td>{{this.name}}</td>
                     <td>{{this.project.name}}</td>
-                    <td>{{formatDate this.start_date "long"}}</td>
-                    <td>{{formatDate this.due_date "long"}}</td>
-                    <td>{{this.advancement}}%</td>
-                    <td>{{this.status.name}}</td>
+                    <td class="date">{{formatDate this.start_date "long"}}</td>
+                    <td class="date">{{formatDate this.due_date "long"}}</td>
+                    <td style="text-align : center">{{this.advancement}}%</td>
+                    <td><span class="badge badge-warning">{{this.status.name}}</span></td>
+                    <td><span class="badge badge-danger">{{this.priority.name}}</span></td>
                 </tr>
             {{/each}}
         </table>
@@ -75,6 +77,7 @@
     <!-- Finished tasks summary :
         all the finished tasks assigned to the user-->
     <div id="FinishedTasks" class="container tab-pane fade">
+        {{#if finishedTasks}}
         <table class="table">
             <tr>
                 <th>Tasks</th>
@@ -82,17 +85,20 @@
                 <th>Start date</th>
                 <th>Due date</th>
                 <th>Status</th>
+                <th>Priority</th>
             </tr>
             {{#each finishedTasks}}
                 <tr>
                     <td>{{this.name}}</td>
                     <td>{{this.project.name}}</td>
-                    <td>{{formatDate this.start_date "long"}}</td>
-                    <td>{{formatDate this.due_date "long"}}</td>
-                    <td>{{this.status.name}}</td>
+                    <td class="date">{{formatDate this.start_date "long"}}</td>
+                    <td class="date">{{formatDate this.due_date "long"}}</td>
+                    <td><span class="badge badge-warning">{{this.status.name}}</span></td>
+                    <td><span class="badge badge-danger">{{this.priority.name}}</span></td>
                 </tr>
             {{/each}}
         </table>
+        {{/if}}
     </div>
 
     <!-- Project detail :
@@ -109,15 +115,17 @@
                 <th>Due date</th>
                 <th>Advancement</th>
                 <th>Status</th>
+                <th>Priority</th>
             </tr>
             {{#each this.tasks}}
-                <tr {{#ifeq this.assignee.id ../../userId}}bgcolor="#00FF00"{{/ifeq}}>
+                <tr {{#ifeq this.assignee.id ../../userId}}bgcolor="#e6e6ff"{{/ifeq}}>
                     <td>{{this.name}}</td>
                     <td><span class="badge badge-primary">{{this.assignee.firstname}} {{this.assignee.name}}</span></td>
-                    <td>{{formatDate this.start_date "long"}}</td>
-                    <td>{{formatDate this.due_date "long"}}</td>
-                    <td>{{this.advancement}}%</td>
-                    <td>{{this.status.name}}</td>
+                    <td class="date">{{formatDate this.start_date "long"}}</td>
+                    <td class="date">{{formatDate this.due_date "long"}}</td>
+                    <td style="text-align : center">{{this.advancement}}%</td>
+                    <td><span class="badge badge-warning">{{this.status.name}}</span></td>
+                    <td><span class="badge badge-danger">{{this.priority.name}}</span></td>
                 </tr>
             {{/each}}
         </table>
