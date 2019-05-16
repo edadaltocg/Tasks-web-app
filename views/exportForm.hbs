@@ -1,12 +1,32 @@
-<h1>
-    Export
+<head>
+<style>
+    .formBlock {
+        align: center;
+        width: 800px;
+        margin:0 auto;
+        border: 3px solid gray;
+        padding: 10px;
+    }
+</style>
+</head>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">
+            <a href="/projects">Projects</a>
+        </li>
+    </ol>
+</nav>
+
+<h1 style="text-align: center;margin: 50px">
+    Please choose the {{title}} you want to export
 </h1>
 
-<div>
-    <form action="/export/{{object}}" method="post">
+<div style="margin-top: 50px" class="formBlock">
+    <form action="/export/{{aim}}" method="post" >
         {{#each choices}}
-            <input type="checkbox" name="{{this._id}}" value="selected">{{this.name}}<br>
+            <input type="checkbox" name="{{this._id}}" value="selected" style="margin: 10px">{{this.name}}<br>
         {{/each}}
-        <button type="submit" class="btn btn-primary">confirm</button>
+        <button type="submit" class="btn btn-primary" style="margin: 10px">confirm</button>
     </form>
 </div>
