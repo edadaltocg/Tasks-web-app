@@ -11,7 +11,7 @@
     "debug": "~2.6.9",
     "express": "^4.16.4",
     "express-easy-zip": "^1.1.4",
-    "express-handlebars": "^3.0.2",
+    "express-handlebars": "^5.3.1",
     "express-session": "^1.16.1",
     "file-saver": "^2.0.1",
     "hbs": "~4.0.1",
